@@ -25,20 +25,19 @@ namespace GptBarv2.Views
 
         private void LoadProduct()
         {
-            // Mock ürün listesi
+            // Örnek mock ürün dizisi; her ürün için temsili data kullanýlýyor.
             var products = new[]
             {
-                new { Name="Gordon's London Dry", Description="London dry gin..." },
-                new { Name="Gordon's Premium Pink", Description="Fruity pink gin..." },
-                new { Name="Absolut Original", Description="Swedish vodka..." },
-                new { Name="Grey Goose Original", Description="French premium vodka..." },
-                // ...
+                new { Name = "Gordon's London Dry", Description = "Klasik London Dry gin; yoðun bitkisel aromalar.", Image = "dotnet_bot.png" },
+                new { Name = "Gordon's Premium Pink", Description = "Meyvemsi notalar ve hafif çiçeksi aromalar.", Image = "dotnet_bot.png" },
+                new { Name = "Absolut Original", Description = "Saf Ýsveç votkasý, pürüzsüz bir doku.", Image = "dotnet_bot.png" },
             };
 
             var product = products.FirstOrDefault(p => p.Name == _productName);
             if (product != null)
             {
                 ProductNameLabel.Text = product.Name;
+                ProductImage.Source = product.Image;
                 ProductDescriptionLabel.Text = product.Description;
             }
             else

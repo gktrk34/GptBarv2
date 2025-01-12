@@ -1,46 +1,80 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
+<ContentPage 
     x:Class="GptBarv2.Views.ProductDetailPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     Title="Ürün Detayı">
 
     <Grid RowDefinitions="Auto,*">
-
-        <!-- Hero Image -->
+        <!-- Üstte hero image (bar_hero.jpg) -->
         <Image Grid.Row="0"
                Source="bar_hero.jpg"
                Aspect="AspectFill"
                HeightRequest="200" />
 
+        <!-- Alttaki içerik ScrollView içerisinde -->
         <ScrollView Grid.Row="1">
             <VerticalStackLayout Padding="10" Spacing="10">
-
+                <!-- Ürün adı -->
                 <Label x:Name="ProductNameLabel"
                        Text="Ürün Detayı"
                        FontAttributes="Bold"
                        FontSize="24"
                        HorizontalOptions="Center" />
 
-                <!-- Örnek: ürün resmi (veya dotnet_bot.png) -->
+                <!-- Ürün resmi, burada temsili dotnet_bot.png -->
                 <Image x:Name="ProductImage"
                        Source="dotnet_bot.png"
-                       HeightRequest="100"
+                       HeightRequest="150"
                        Aspect="AspectFit"
                        HorizontalOptions="Center" />
 
+                <!-- Basit ürün açıklaması -->
                 <Label x:Name="ProductDescriptionLabel"
+                       Text="Ürün hakkında basit açıklama buraya gelecek."
                        FontSize="16"
                        TextColor="Gray"
                        HorizontalOptions="Center" />
 
-                <!-- Favori / Bar Butonları -->
+                <!-- Favori ve Bar butonları -->
                 <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
                     <Button Text="Favorilere Ekle" 
                             Clicked="OnFavoriteClicked" />
                     <Button Text="Barıma Ekle" 
                             Clicked="OnAddToBarClicked" />
                 </HorizontalStackLayout>
+
+                <!-- Expander: Tadım Notları -->
+                <toolkit:Expander>
+                    <toolkit:Expander.Header>
+                        <Label Text="Tadım Notları" 
+                               FontAttributes="Bold" 
+                               FontSize="18" 
+                               TextColor="DarkBlue" />
+                    </toolkit:Expander.Header>
+                    <toolkit:Expander.Content>
+                        <Label Text="Bu ürün, yoğun bitkisel notalar, hafif narenciye ve baharat ipuçlarıyla karakterize edilmiştir. Tadım sırasında dengeleyici asidite ve ufak dokunuşlu tatlılık hissedilir." 
+                               FontSize="16" 
+                               TextColor="Black" />
+                    </toolkit:Expander.Content>
+                </toolkit:Expander>
+
+                <!-- Expander: Ek Bilgiler -->
+                <toolkit:Expander>
+                    <toolkit:Expander.Header>
+                        <Label Text="Ek Bilgiler" 
+                               FontAttributes="Bold" 
+                               FontSize="18" 
+                               TextColor="DarkBlue" />
+                    </toolkit:Expander.Header>
+                    <toolkit:Expander.Content>
+                        <Label Text="Bu alanda ürünün üretici bilgileri, alkol oranı, içerik listesi ve önerilen eşleştirmeler gibi bilgiler yer alacaktır." 
+                               FontSize="16" 
+                               TextColor="Black" />
+                    </toolkit:Expander.Content>
+                </toolkit:Expander>
+
             </VerticalStackLayout>
         </ScrollView>
     </Grid>

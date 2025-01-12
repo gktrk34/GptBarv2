@@ -1,10 +1,13 @@
 using Microsoft.Maui.Controls;
 using System.Collections.Generic;
+using System.Windows.Input;
 
 namespace GptBarv2.Views
 {
     public partial class HomePage : ContentPage
     {
+        public ICommand CategoryTappedCommand { get; private set; }
+
         public HomePage()
         {
             InitializeComponent();
@@ -18,21 +21,18 @@ namespace GptBarv2.Views
                 new CategoryModel { Name = "Rom" },
             };
 
+            CategoryTappedCommand = new Command<CategoryModel>(OnCategoryTapped);
+
+            BindingContext = this;
             CategoryCollection.ItemsSource = categories;
         }
 
-        private async void OnCategorySelected(object sender, SelectionChangedEventArgs e)
+        private async void OnCategoryTapped(CategoryModel category)
         {
-            if (e.CurrentSelection != null && e.CurrentSelection.Count > 0)
+            if (category != null)
             {
-                var selectedCategory = e.CurrentSelection[0] as CategoryModel;
-                if (selectedCategory != null)
-                {
-                    // CategoryDetailPage'e navigasyon
-                    string route = $"CategoryDetailPage?category={selectedCategory.Name}";
-                    await Shell.Current.GoToAsync(route);
-                }
-                ((CollectionView)sender).SelectedItem = null;
+                string route = $"CategoryDetailPage?category={category.Name}";
+                await Shell.Current.GoToAsync(route);
             }
         }
     }

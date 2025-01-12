@@ -22,29 +22,26 @@
                        FontSize="24"
                        HorizontalOptions="Center" />
 
+                <!-- Ürünler Listesi -->
                 <CollectionView x:Name="ProductsCollection"
-                                SelectionMode="Single"
-                                SelectionChanged="OnProductSelected"
+                                SelectionMode="None"
                                 Margin="0,10,0,0">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Frame CornerRadius="10"
-                                   Padding="10"
+                                   Padding="20"
                                    Margin="0,5"
                                    BackgroundColor="#CD853F">
-
-                                <HorizontalStackLayout Spacing="10">
-                                    <Image Source="dotnet_bot.png"
-                                           WidthRequest="40"
-                                           HeightRequest="40"
-                                           Aspect="AspectFit" />
-                                    <Label Text="{Binding Name}"
-                                           TextColor="White"
-                                           FontAttributes="Bold"
-                                           FontSize="16"
-                                           VerticalOptions="Center" />
-                                </HorizontalStackLayout>
-
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={x:Reference ProductsCollection}, Path=BindingContext.ProductTappedCommand}"
+                                                          CommandParameter="{Binding}" />
+                                </Frame.GestureRecognizers>
+                                <Label Text="{Binding Name}"
+                                       TextColor="White"
+                                       FontAttributes="Bold"
+                                       FontSize="16"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center" />
                             </Frame>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

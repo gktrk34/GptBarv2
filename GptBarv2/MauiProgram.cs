@@ -1,6 +1,7 @@
 ﻿using Microsoft.Maui;
 using Microsoft.Maui.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using CommunityToolkit.Maui;
 
 namespace GptBarv2
 {
@@ -12,6 +13,7 @@ namespace GptBarv2
 
             builder
                 .UseMauiApp<App>() // App.xaml.cs içindeki 'App' sınıfını kullanır
+                .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
                     // fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

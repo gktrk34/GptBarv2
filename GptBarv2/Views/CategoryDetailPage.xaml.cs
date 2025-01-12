@@ -1,6 +1,7 @@
 using Microsoft.Maui.Controls;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Input;
 
 namespace GptBarv2.Views
 {
@@ -19,26 +20,30 @@ namespace GptBarv2.Views
             }
         }
 
+        public ICommand BrandTappedCommand { get; private set; }
+
         public CategoryDetailPage()
         {
             InitializeComponent();
+
+            BrandTappedCommand = new Command<BrandModel>(OnBrandTapped);
+            BindingContext = this;
         }
 
         private void LoadCategoryData()
         {
             CategoryNameLabel.Text = $"Kategori: {_categoryName}";
 
-            // Örnek marka verileri
             var allBrands = new List<BrandModel>
             {
-                new BrandModel { Name="Gordon's", Category="Gin" },
-                new BrandModel { Name="Beefeater", Category="Gin" },
-                new BrandModel { Name="Absolut", Category="Vodka" },
-                new BrandModel { Name="Grey Goose", Category="Vodka" },
-                new BrandModel { Name="Jack Daniel's", Category="Whisky" },
-                new BrandModel { Name="Johnnie Walker", Category="Whisky" },
-                new BrandModel { Name="Don Julio", Category="Tekila" },
-                new BrandModel { Name="Patrón", Category="Tekila" },
+                new BrandModel { Name = "Gordon's", Category = "Gin" },
+                new BrandModel { Name = "Beefeater", Category = "Gin" },
+                new BrandModel { Name = "Absolut", Category = "Vodka" },
+                new BrandModel { Name = "Grey Goose", Category = "Vodka" },
+                new BrandModel { Name = "Jack Daniel's", Category = "Whisky" },
+                new BrandModel { Name = "Johnnie Walker", Category = "Whisky" },
+                new BrandModel { Name = "Don Julio", Category = "Tekila" },
+                new BrandModel { Name = "Patrón", Category = "Tekila" },
             };
 
             var filtered = allBrands
@@ -48,17 +53,12 @@ namespace GptBarv2.Views
             BrandsCollection.ItemsSource = filtered;
         }
 
-        private async void OnBrandSelected(object sender, SelectionChangedEventArgs e)
+        private async void OnBrandTapped(BrandModel brand)
         {
-            if (e.CurrentSelection != null && e.CurrentSelection.Count > 0)
+            if (brand != null)
             {
-                var selectedBrand = e.CurrentSelection[0] as BrandModel;
-                if (selectedBrand != null)
-                {
-                    string route = $"BrandDetailPage?brandName={selectedBrand.Name}";
-                    await Shell.Current.GoToAsync(route);
-                }
-                ((CollectionView)sender).SelectedItem = null;
+                string route = $"BrandDetailPage?brandName={brand.Name}";
+                await Shell.Current.GoToAsync(route);
             }
         }
     }

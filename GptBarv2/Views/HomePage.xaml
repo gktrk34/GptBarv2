@@ -16,32 +16,26 @@
         <!-- Kategori Listesi -->
         <ScrollView Grid.Row="1">
             <CollectionView x:Name="CategoryCollection"
-                            SelectionMode="Single"
-                            SelectionChanged="OnCategorySelected"
+                            SelectionMode="None"
                             Margin="10">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <!-- Kart -->
+                        <!-- Kategori Kartı -->
                         <Frame CornerRadius="10"
-                               Padding="10"
+                               Padding="20"
                                Margin="0,5"
                                BackgroundColor="#8B4513">
-
-                            <HorizontalStackLayout Spacing="10">
-                                <!-- Küçük resim -->
-                                <Image Source="dotnet_bot.png"
-                                       WidthRequest="40"
-                                       HeightRequest="40"
-                                       Aspect="AspectFit" />
-
-                                <!-- Kategori adı -->
-                                <Label Text="{Binding Name}"
-                                       TextColor="White"
-                                       FontAttributes="Bold"
-                                       FontSize="16"
-                                       VerticalOptions="Center" />
-                            </HorizontalStackLayout>
-
+                            <Frame.GestureRecognizers>
+                                <!-- TapGestureRecognizer -->
+                                <TapGestureRecognizer Command="{Binding Source={x:Reference CategoryCollection}, Path=BindingContext.CategoryTappedCommand}"
+                                                      CommandParameter="{Binding}" />
+                            </Frame.GestureRecognizers>
+                            <Label Text="{Binding Name}"
+                                   TextColor="White"
+                                   FontAttributes="Bold"
+                                   FontSize="16"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center" />
                         </Frame>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
