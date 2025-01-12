@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage 
+    x:Class="GptBarv2.Views.FavoritesPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Favoriler">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Hero Image -->
+        <Image Grid.Row="0"
+               Source="bar_hero.jpg"
+               Aspect="AspectFill"
+               HeightRequest="200" />
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="20" Spacing="10">
+
+                <Label Text="Favorilerim" 
+                       FontAttributes="Bold"
+                       FontSize="24" 
+                       HorizontalOptions="Center" />
+
+                <Frame CornerRadius="10"
+                       Padding="10"
+                       Margin="0,5"
+                       BackgroundColor="#CD853F">
+                    <HorizontalStackLayout Spacing="10">
+                        <Image Source="dotnet_bot.png"
+                               WidthRequest="40"
+                               HeightRequest="40"
+                               Aspect="AspectFit" />
+                        <Label Text="(Favori ürünü listesi burada...)" 
+                               TextColor="White"
+                               FontAttributes="Bold"
+                               FontSize="16"
+                               VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

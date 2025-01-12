@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage 
+    x:Class="GptBarv2.Views.HomePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Anasayfa">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Hero Image -->
+        <Image Grid.Row="0"
+               Source="bar_hero.jpg"
+               Aspect="AspectFill"
+               HeightRequest="200" />
+
+        <!-- Kategori Listesi -->
+        <ScrollView Grid.Row="1">
+            <CollectionView x:Name="CategoryCollection"
+                            SelectionMode="Single"
+                            SelectionChanged="OnCategorySelected"
+                            Margin="10">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <!-- Kart -->
+                        <Frame CornerRadius="10"
+                               Padding="10"
+                               Margin="0,5"
+                               BackgroundColor="#8B4513">
+
+                            <HorizontalStackLayout Spacing="10">
+                                <!-- Küçük resim -->
+                                <Image Source="dotnet_bot.png"
+                                       WidthRequest="40"
+                                       HeightRequest="40"
+                                       Aspect="AspectFit" />
+
+                                <!-- Kategori adı -->
+                                <Label Text="{Binding Name}"
+                                       TextColor="White"
+                                       FontAttributes="Bold"
+                                       FontSize="16"
+                                       VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </ScrollView>
+    </Grid>
+</ContentPage>

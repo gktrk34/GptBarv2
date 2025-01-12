@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Shell 
+    x:Class="GptBarv2.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:GptBarv2.Views"
+    Shell.FlyoutBehavior="Flyout">
+
+    <!--
+        Bu örnekte Flyout (hamburger menü) kullanıyoruz.
+        "TabBar" tamamen kaldırıldı.
+        FlyoutItem'lar, menüde ayrı girişler (satırlar) olarak görünür.
+    -->
+
+    <FlyoutItem Title="Anasayfa" Icon="home.png">
+        <!-- 
+            ShellContent içine "HomePage" (Views klasöründe oluşturman lazım) atıyoruz.
+            Title isteğe bağlı (menüde de gösterilir).
+        -->
+        <ShellContent 
+            Title="Anasayfa"
+            ContentTemplate="{DataTemplate views:HomePage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Favoriler" Icon="favorite.png">
+        <ShellContent 
+            Title="Favoriler"
+            ContentTemplate="{DataTemplate views:FavoritesPage}" />
+    </FlyoutItem>
+
+    <!-- İleride buraya ekleyebileceğin ek sayfalar:
+         <FlyoutItem Title="Barım" Icon="bar.png">
+             <ShellContent 
+                 Title="Barım"
+                 ContentTemplate="{DataTemplate views:MyBarPage}" />
+         </FlyoutItem>
+    -->
+
+</Shell>
