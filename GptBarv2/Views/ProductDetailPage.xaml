@@ -38,27 +38,27 @@
                 <HorizontalStackLayout x:Name="RatingContainer"
                                        Spacing="2"
                                        HorizontalOptions="Center">
-                    <Image Source="emptystar.png" HeightRequest="32">
+                    <Image Source="emptystar.png" HeightRequest="32" WidthRequest="32">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnStarTapped" CommandParameter="1" />
                         </Image.GestureRecognizers>
                     </Image>
-                    <Image Source="emptystar.png" HeightRequest="32">
+                    <Image Source="emptystar.png" HeightRequest="32" WidthRequest="32">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnStarTapped" CommandParameter="2" />
                         </Image.GestureRecognizers>
                     </Image>
-                    <Image Source="emptystar.png" HeightRequest="32">
+                    <Image Source="emptystar.png" HeightRequest="32" WidthRequest="32">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnStarTapped" CommandParameter="3" />
                         </Image.GestureRecognizers>
                     </Image>
-                    <Image Source="emptystar.png" HeightRequest="32">
+                    <Image Source="emptystar.png" HeightRequest="32" WidthRequest="32">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnStarTapped" CommandParameter="4" />
                         </Image.GestureRecognizers>
                     </Image>
-                    <Image Source="emptystar.png" HeightRequest="32">
+                    <Image Source="emptystar.png" HeightRequest="32" WidthRequest="32">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnStarTapped" CommandParameter="5" />
                         </Image.GestureRecognizers>

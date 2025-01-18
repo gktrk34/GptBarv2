@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 using GptBarv2.Models;
-using System.Runtime.CompilerServices;
 
 namespace GptBarv2.Views
 {
@@ -58,15 +57,15 @@ namespace GptBarv2.Views
             ProductTappedCommand = new Command<ProductModel>(OnProductTapped);
             BindingContext = this;
 
-            // Tüm ürünleri yükle
-            Products = new ObservableCollection<ProductModel>(LoadAllProducts());
         }
-        private List<ProductModel> LoadAllProducts()
+
+
+        private void LoadProduct()
         {
-            // Tüm ürün verilerini içeren listeyi döndürür
-            return new List<ProductModel>
+            // Örnek ürün verileri
+            var products = new List<ProductModel>
             {
-                new ProductModel { Name = "Gordon's London Dry", Description = "Klasik London Dry gin; yoðun bitkisel aromalar.", ImageSource = "gordonslondondry.png", Price = 120.00, Rating = 4, Category = "Gin", TastingNotes = "Yoðun ardýç, kiþniþ ve melekotu aromalarý. Damakta narenciye ve baharatlý notalar.", AdditionalInfo = "Alkol Oraný: %43\nÜretim Yeri: Ýngiltere" },
+                 new ProductModel { Name = "Gordon's London Dry", Description = "Klasik London Dry gin; yoðun bitkisel aromalar.", ImageSource = "gordonslondondry.png", Price = 120.00, Rating = 4, Category = "Gin", TastingNotes = "Yoðun ardýç, kiþniþ ve melekotu aromalarý. Damakta narenciye ve baharatlý notalar.", AdditionalInfo = "Alkol Oraný: %43\nÜretim Yeri: Ýngiltere" },
                 new ProductModel { Name = "Gordon's Premium Pink", Description = "Meyvemsi notalar ve hafif çiçeksi aromalar.", ImageSource = "gordonspremiumpink.png", Price = 135.00, Rating = 4, Category = "Gin", TastingNotes = "Çilek, ahududu ve frenk üzümü aromalarý. Hafif tatlý ve ferahlatýcý.", AdditionalInfo = "Alkol Oraný: %37.5\nÜretim Yeri: Ýngiltere" },
                 new ProductModel { Name = "Beefeater London Dry", Description = "Geleneksel bir London Dry Gin, belirgin ardýç ve narenciye notalarý.", ImageSource = "beefeaterlondondry.png", Price = 140.00, Rating = 4, Category = "Gin", TastingNotes = "Ardýç, limon kabuðu ve kiþniþ aromalarý. Damakta kuru ve baharatlý bir bitiþ.", AdditionalInfo = "Alkol Oraný: %40\nÜretim Yeri: Ýngiltere" },
                 new ProductModel { Name = "Tanqueray London Dry", Description = "Zengin ve baharatlý, klasik bir cin.", ImageSource = "tanqueraylondondry.png", Price = 155.00, Rating = 4, Category = "Gin", TastingNotes = "Ardýç, melekotu kökü ve meyan kökü aromalarý. Damakta yoðun ve kalýcý.", AdditionalInfo = "Alkol Oraný: %47.3\nÜretim Yeri: Ýngiltere" },
@@ -83,28 +82,21 @@ namespace GptBarv2.Views
                 new ProductModel { Name = "Absolut Original", Description = "Saf Ýsveç votkasý, pürüzsüz bir doku.", ImageSource = "absolutoriginal.png", Price = 90.00, Rating = 4, Category = "Vodka", TastingNotes = "Temiz ve nötr aroma profili, hafif tahýl notalarý.", AdditionalInfo = "Alkol Oraný: %40\nÜretim Yeri: Ýsveç" }
             };
 
-        }
-        private void LoadProduct()
-        {
-            var allProducts = LoadAllProducts();
-
-            var product = allProducts.FirstOrDefault(p => p.Name == _productName);
+            var product = products.FirstOrDefault(p => p.Name == _productName);
             if (product != null)
             {
                 ProductNameLabel.Text = product.Name;
                 HeroImage.Source = product.ImageSource;
                 ProductDescriptionLabel.Text = product.Description;
                 ProductPriceLabel.Text = $"{product.Price:C}";
-                _currentRating = (int)product.Rating; // Load the rating
-                UpdateRatingStars(); // Update the stars based on the loaded rating
+                _currentRating = (int)product.Rating;
+                UpdateRatingStars();
                 TastingNotesLabel.Text = product.TastingNotes;
                 AdditionalInfoLabel.Text = product.AdditionalInfo;
                 ProductNotFoundLabel.IsVisible = false;
 
-                SimilarProducts = new ObservableCollection<ProductModel>(
-                    allProducts.Where(p => p.Category == product.Category && p.Name != product.Name)
-                               .Select(p => new ProductModel { Name = p.Name, ImageSource = p.ImageSource })
-                );
+                SimilarProducts = new ObservableCollection<ProductModel>(products.Where(p => p.Category == product.Category && p.Name != product.Name)
+                    .Select(p => new ProductModel { Name = p.Name, ImageSource = p.ImageSource }));
 
                 OnPropertyChanged(nameof(SimilarProducts));
             }
@@ -148,7 +140,6 @@ namespace GptBarv2.Views
             if (e.Parameter is int starCount)
             {
                 _currentRating = starCount;
-                System.Diagnostics.Debug.WriteLine($"_currentRating: {_currentRating}"); // Debug satýrý eklendi
                 UpdateRatingStars();
 
                 // Güncel ürünü bul ve Rating özelliðini güncelle
