@@ -14,6 +14,7 @@ namespace GptBarv2
             Routing.RegisterRoute("BrandDetailPage", typeof(GptBarv2.Views.BrandDetailPage));
             Routing.RegisterRoute("ProductDetailPage", typeof(GptBarv2.Views.ProductDetailPage));
 
+
         }
     }
 }

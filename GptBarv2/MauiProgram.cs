@@ -1,13 +1,16 @@
 ﻿using CommunityToolkit.Maui;
 using GptBarv2.Data;
-using GptBarv2.Repositories; // Birazdan ekleyeceğiz
-using Microsoft.EntityFrameworkCore;
 using GptBarv2.Models;
+using GptBarv2.Repositories; // <-- EFProductRepository, IProductRepository
+using Microsoft.EntityFrameworkCore;
 
 namespace GptBarv2;
 
 public static class MauiProgram
 {
+    // Bu static property, sayfalarda ServiceProvider’a ulaşmamızı sağlayacak
+    public static IServiceProvider ServiceProvider { get; private set; }
+
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
@@ -20,26 +23,30 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
-        // EF Core Sqlite
+        // EF Core ile DbContext
         string dbPath = Path.Combine(FileSystem.AppDataDirectory, "mydb.db3");
         builder.Services.AddDbContext<AppDbContext>(options =>
         {
             options.UseSqlite($"Filename={dbPath}");
         });
 
-        // Repository eklersek (BrandRepository, vs.)
+        // Repository’leri DI container’a ekleyelim
         builder.Services.AddScoped<IBrandRepository, EFBrandRepository>();
+        builder.Services.AddScoped<IProductRepository, EFProductRepository>();
 
+        // Uygulamayı inşa et
         var app = builder.Build();
 
-        // DB oluştur, seed veriler ekle
+        // Veritabanı oluşturma / seed
         using (var scope = app.Services.CreateScope())
         {
             var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            db.Database.EnsureCreated();
+            db.Database.EnsureCreated(); // Tablolar yoksa oluşturur
             SeedDatabase(db);
         }
-        builder.Services.AddScoped<IProductRepository, EFProductRepository>();
+
+        // ServiceProvider’ı saklayalım, sayfalar parametresiz constructor’da buradan alacak
+        ServiceProvider = app.Services;
 
         return app;
     }
@@ -54,8 +61,7 @@ public static class MauiProgram
             {
                 Name = "Gordon's",
                 Category = "Gin",
-                ImageSource = "gordons.png", // Marka logosu
-                                             // Products listesini boş bırakıyoruz; aşağıda eklenecek
+                ImageSource = "gordons.png",
             };
 
             var brandBeefeater = new BrandModel
@@ -79,103 +85,95 @@ public static class MauiProgram
                 ImageSource = "greygoose.png",
             };
 
-            // Daha fazla marka ekleyebilirsiniz.
-            // Örneğin brandTanqueray, brandHendricks, vs.
-
             // 2) ÜRÜNLER (ProductModel)
-            // Her ürün, "Brand" navigation property’si üzerinden markayla ilişkilendirilecek.
             var products = new List<ProductModel>
-        {
-            // Gordons
-            new ProductModel
             {
-                Name = "Gordon's London Dry",
-                Description = "Klasik London Dry gin; yoğun bitkisel aromalar.",
-                ImageSource = "gordonslondondry.png",
-                Price = 120.00,
-                Rating = 4,
-                Category = "Gin",
-                TastingNotes = "Yoğun ardıç, kişniş ve melekotu aromaları. Damakta narenciye ve baharatlı notalar.",
-                AdditionalInfo = "Alkol Oranı: %43\nÜretim Yeri: İngiltere",
-                Brand = brandGordons
-            },
-            new ProductModel
-            {
-                Name = "Gordon's Premium Pink",
-                Description = "Meyvemsi notalar ve hafif çiçeksi aromalar.",
-                ImageSource = "gordonspremiumpink.png",
-                Price = 135.00,
-                Rating = 4,
-                Category = "Gin",
-                TastingNotes = "Çilek, ahududu ve frenk üzümü aromaları. Hafif tatlı ve ferahlatıcı.",
-                AdditionalInfo = "Alkol Oranı: %37.5\nÜretim Yeri: İngiltere",
-                Brand = brandGordons
-            },
+                // Gordon's
+                new ProductModel
+                {
+                    Name = "Gordon's London Dry",
+                    Description = "Klasik London Dry gin; yoğun bitkisel aromalar.",
+                    ImageSource = "gordonslondondry.png",
+                    Price = 120.00,
+                    Rating = 4,
+                    Category = "Gin",
+                    TastingNotes = "Yoğun ardıç, kişniş ve melekotu aromaları. Damakta narenciye ve baharatlı notalar.",
+                    AdditionalInfo = "Alkol Oranı: %43\nÜretim Yeri: İngiltere",
+                    Brand = brandGordons
+                },
+                new ProductModel
+                {
+                    Name = "Gordon's Premium Pink",
+                    Description = "Meyvemsi notalar ve hafif çiçeksi aromalar.",
+                    ImageSource = "gordonspremiumpink.png",
+                    Price = 135.00,
+                    Rating = 4,
+                    Category = "Gin",
+                    TastingNotes = "Çilek, ahududu ve frenk üzümü aromaları. Hafif tatlı ve ferahlatıcı.",
+                    AdditionalInfo = "Alkol Oranı: %37.5\nÜretim Yeri: İngiltere",
+                    Brand = brandGordons
+                },
 
-            // Beefeater
-            new ProductModel
-            {
-                Name = "Beefeater London Dry",
-                Description = "Geleneksel bir London Dry Gin, belirgin ardıç ve narenciye notaları.",
-                ImageSource = "beefeaterlondondry.png",
-                Price = 140.00,
-                Rating = 4,
-                Category = "Gin",
-                TastingNotes = "Ardıç, limon kabuğu ve kişniş aromaları. Damakta kuru ve baharatlı bir bitiş.",
-                AdditionalInfo = "Alkol Oranı: %40\nÜretim Yeri: İngiltere",
-                Brand = brandBeefeater
-            },
+                // Beefeater
+                new ProductModel
+                {
+                    Name = "Beefeater London Dry",
+                    Description = "Geleneksel bir London Dry Gin, belirgin ardıç ve narenciye notaları.",
+                    ImageSource = "beefeaterlondondry.png",
+                    Price = 140.00,
+                    Rating = 4,
+                    Category = "Gin",
+                    TastingNotes = "Ardıç, limon kabuğu ve kişniş aromaları. Damakta kuru ve baharatlı bir bitiş.",
+                    AdditionalInfo = "Alkol Oranı: %40\nÜretim Yeri: İngiltere",
+                    Brand = brandBeefeater
+                },
 
-            // Absolut
-            new ProductModel
-            {
-                Name = "Absolut Original",
-                Description = "Saf İsveç votkası, pürüzsüz bir doku.",
-                ImageSource = "absolutoriginal.png",
-                Price = 90.00,
-                Rating = 4,
-                Category = "Vodka",
-                TastingNotes = "Temiz ve nötr aroma profili, hafif tahıl notaları.",
-                AdditionalInfo = "Alkol Oranı: %40\nÜretim Yeri: İsveç",
-                Brand = brandAbsolut
-            },
-            new ProductModel
-            {
-                Name = "Absolut Citron",
-                Description = "Limon ve narenciye dokusuyla ferahlatıcı bir votka.",
-                ImageSource = "absolutcitron.png",
-                Price = 95.00,
-                Rating = 4,
-                Category = "Vodka",
-                TastingNotes = "Turunçgil, limon kabuğu, hafif ekşi ve taze aromalar.",
-                AdditionalInfo = "Alkol Oranı: %40\nÜretim Yeri: İsveç",
-                Brand = brandAbsolut
-            },
+                // Absolut
+                new ProductModel
+                {
+                    Name = "Absolut Original",
+                    Description = "Saf İsveç votkası, pürüzsüz bir doku.",
+                    ImageSource = "absolutoriginal.png",
+                    Price = 90.00,
+                    Rating = 4,
+                    Category = "Vodka",
+                    TastingNotes = "Temiz ve nötr aroma profili, hafif tahıl notaları.",
+                    AdditionalInfo = "Alkol Oranı: %40\nÜretim Yeri: İsveç",
+                    Brand = brandAbsolut
+                },
+                new ProductModel
+                {
+                    Name = "Absolut Citron",
+                    Description = "Limon ve narenciye dokusuyla ferahlatıcı bir votka.",
+                    ImageSource = "absolutcitron.png",
+                    Price = 95.00,
+                    Rating = 4,
+                    Category = "Vodka",
+                    TastingNotes = "Turunçgil, limon kabuğu, hafif ekşi ve taze aromalar.",
+                    AdditionalInfo = "Alkol Oranı: %40\nÜretim Yeri: İsveç",
+                    Brand = brandAbsolut
+                },
 
-            // Grey Goose
-            new ProductModel
-            {
-                Name = "Grey Goose Original",
-                Description = "Fransız lüks votkası, buğday bazlı.",
-                ImageSource = "greygooseoriginal.png",
-                Price = 190.00,
-                Rating = 5,
-                Category = "Vodka",
-                TastingNotes = "Buğday bazlı yumuşak tat, hafif fındıksı aromalar.",
-                AdditionalInfo = "Alkol Oranı: %40\nÜretim Yeri: Fransa",
-                Brand = brandGreyGoose
-            },
-        };
+                // Grey Goose
+                new ProductModel
+                {
+                    Name = "Grey Goose Original",
+                    Description = "Fransız lüks votkası, buğday bazlı.",
+                    ImageSource = "greygooseoriginal.png",
+                    Price = 190.00,
+                    Rating = 5,
+                    Category = "Vodka",
+                    TastingNotes = "Buğday bazlı yumuşak tat, hafif fındıksı aromalar.",
+                    AdditionalInfo = "Alkol Oranı: %40\nÜretim Yeri: Fransa",
+                    Brand = brandGreyGoose
+                },
+            };
 
-            // 3) Veritabanına ekleyelim
-            // Önce markaları ekleyelim
+            // Markaları ekle
             db.Brands.AddRange(brandGordons, brandBeefeater, brandAbsolut, brandGreyGoose);
-
-            // Sonra ürünleri
+            // Ürünleri ekle
             db.Products.AddRange(products);
-
             db.SaveChanges();
         }
     }
 }
-    

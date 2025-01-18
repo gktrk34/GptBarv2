@@ -1,5 +1,5 @@
 using GptBarv2.Models;
-using GptBarv2.Repositories; // IProductRepository
+using GptBarv2.Repositories;
 using Microsoft.Maui.Controls;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -34,12 +34,21 @@ namespace GptBarv2.Views
             }
         }
 
+        private ProductModel _currentProduct;
         private int _currentRating = 0;
 
-        public ProductDetailPage(IProductRepository productRepo)
+        // Komut: Benzer ürün item’ýna týklayýnca
+        public Command<ProductModel> SimilarProductTappedCommand { get; private set; }
+
+        public ProductDetailPage()
         {
             InitializeComponent();
-            _productRepo = productRepo;
+
+            // DI
+            _productRepo = MauiProgram.ServiceProvider.GetRequiredService<IProductRepository>();
+
+            // Komut oluþtur
+            SimilarProductTappedCommand = new Command<ProductModel>(OnSimilarProductTapped);
 
             BindingContext = this;
         }
@@ -48,26 +57,27 @@ namespace GptBarv2.Views
         {
             base.OnAppearing();
 
-            // Veritabanýndan ürün çek
             if (!string.IsNullOrEmpty(ProductName))
             {
                 var product = await _productRepo.GetByNameAsync(ProductName);
                 if (product != null)
                 {
-                    // XAML'deki kontrolleri doldur
+                    _currentProduct = product;
+
                     ProductNameLabel.Text = product.Name;
                     HeroImage.Source = product.ImageSource;
                     ProductDescriptionLabel.Text = product.Description;
                     ProductPriceLabel.Text = $"{product.Price:C}";
 
                     _currentRating = product.Rating;
+                    System.Diagnostics.Debug.WriteLine($"[OnAppearing] Loaded product Rating = {_currentRating}");
                     UpdateRatingStars();
 
                     TastingNotesLabel.Text = product.TastingNotes;
                     AdditionalInfoLabel.Text = product.AdditionalInfo;
                     ProductNotFoundLabel.IsVisible = false;
 
-                    // Benzer ürünleri de repo'dan çek
+                    // Benzer ürünler
                     var similarList = await _productRepo.GetSimilarByCategoryAsync(product.Category, product.Name);
                     if (similarList != null && similarList.Any())
                     {
@@ -76,7 +86,6 @@ namespace GptBarv2.Views
                 }
                 else
                 {
-                    // Ürün yok
                     ProductNameLabel.Text = "Ürün Bulunamadý";
                     ProductDescriptionLabel.Text = "";
                     HeroImage.Source = "bar_hero.jpg";
@@ -95,25 +104,60 @@ namespace GptBarv2.Views
             DisplayAlert("Barým", $"{ProductName} barýna eklendi!", "OK");
         }
 
+        // Yýldýz týklama
         private async void OnStarTapped(object sender, TappedEventArgs e)
         {
-            if (e.Parameter is int starCount)
+            if (e.Parameter is string starCountString)
             {
-                _currentRating = starCount;
-                UpdateRatingStars();
+                if (int.TryParse(starCountString, out int starCount))
+                {
+                    System.Diagnostics.Debug.WriteLine($"[OnStarTapped] starCount = {starCount}");
+                    await DisplayAlert("Rating", $"Tapped star: {starCount}", "OK");
 
-                // EF Core'da rating'i güncellemek istersen:
-                await _productRepo.UpdateRatingAsync(ProductName, _currentRating);
+                    _currentRating = starCount;
+                    UpdateRatingStars();
+
+                    await _productRepo.UpdateRatingAsync(ProductName, starCount);
+                    System.Diagnostics.Debug.WriteLine($"[OnStarTapped] DB updated rating to {starCount}");
+
+                    if (_currentProduct != null)
+                    {
+                        _currentProduct.Rating = starCount;
+                    }
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("[OnStarTapped] Param is string but not parseable as int!");
+                }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("[OnStarTapped] e.Parameter is not string starCountString!");
             }
         }
 
         private void UpdateRatingStars()
         {
             var starImages = RatingContainer.Children.OfType<Image>();
-            for (int i = 0; i < starImages.Count(); i++)
+            int index = 0;
+            foreach (var star in starImages)
             {
-                starImages.ElementAt(i).Source = i < _currentRating ? "fullstar.png" : "emptystar.png";
+                star.Source = index < _currentRating ? "fullstar.png" : "emptystar.png";
+                index++;
             }
+            System.Diagnostics.Debug.WriteLine($"[UpdateRatingStars] Current rating = {_currentRating}. Updated images.");
+        }
+
+        // Týklanan benzer ürüne git
+        private async void OnSimilarProductTapped(ProductModel tappedProduct)
+        {
+            if (tappedProduct == null) return;
+
+            // 1) Pop current ProductDetail (no animation)
+            await Shell.Current.GoToAsync("..", false);
+
+            // 2) Push new ProductDetail (no animation or true)
+            await Shell.Current.GoToAsync($"ProductDetailPage?productName={tappedProduct.Name}", false);
         }
 
         public new event PropertyChangedEventHandler PropertyChanged;

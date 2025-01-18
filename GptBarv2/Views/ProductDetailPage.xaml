@@ -5,9 +5,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:models="clr-namespace:GptBarv2.Models"
+    x:Name="ProductDetailPageRoot"
     Title="Ürün Detayı">
 
     <Grid RowDefinitions="Auto,*">
+
         <Image
             Grid.Row="0"
             x:Name="HeroImage"
@@ -18,6 +20,7 @@
         <ScrollView Grid.Row="1">
             <VerticalStackLayout Padding="10" Spacing="10">
 
+                <!-- Ürün Adı -->
                 <Label
                     x:Name="ProductNameLabel"
                     Text="Ürün Detayı"
@@ -27,6 +30,7 @@
 
                 <BoxView HeightRequest="1" Color="LightGray" HorizontalOptions="Fill" />
 
+                <!-- Ürün Açıklaması -->
                 <Label
                     x:Name="ProductDescriptionLabel"
                     Text="Ürün hakkında basit açıklama buraya gelecek."
@@ -34,6 +38,7 @@
                     TextColor="Gray"
                     HorizontalOptions="Center" />
 
+                <!-- Fiyat -->
                 <Label
                     x:Name="ProductPriceLabel"
                     Text=""
@@ -41,6 +46,7 @@
                     FontAttributes="Bold"
                     HorizontalOptions="Center" />
 
+                <!-- Rating -->
                 <HorizontalStackLayout
                     x:Name="RatingContainer"
                     Spacing="2"
@@ -73,6 +79,7 @@
                     </Image>
                 </HorizontalStackLayout>
 
+                <!-- Butonlar -->
                 <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
                     <Button
                         Text="Favorilere Ekle"
@@ -82,6 +89,7 @@
                         Clicked="OnAddToBarClicked" />
                 </HorizontalStackLayout>
 
+                <!-- Tadım Notları -->
                 <toolkit:Expander>
                     <toolkit:Expander.Header>
                         <Label
@@ -99,6 +107,7 @@
                     </toolkit:Expander.Content>
                 </toolkit:Expander>
 
+                <!-- Ek Bilgiler -->
                 <toolkit:Expander>
                     <toolkit:Expander.Header>
                         <Label
@@ -116,6 +125,7 @@
                     </toolkit:Expander.Content>
                 </toolkit:Expander>
 
+                <!-- Benzer Ürünler Başlık -->
                 <Label
                     Text="Benzer Ürünler"
                     FontAttributes="Bold"
@@ -123,6 +133,7 @@
                     TextColor="DarkBlue"
                     Margin="0,20,0,10" />
 
+                <!-- Benzer Ürünler Listesi -->
                 <CollectionView
                     x:Name="SimilarProductsCollectionView"
                     ItemsSource="{Binding SimilarProducts}"
@@ -135,7 +146,14 @@
 
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="models:ProductModel">
-                            <StackLayout>
+                            <!-- TIKLANABİLİR ITEM -->
+                            <StackLayout Padding="5">
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding BindingContext.SimilarProductTappedCommand, Source={x:Reference ProductDetailPageRoot}}"
+                                        CommandParameter="{Binding .}" />
+                                </StackLayout.GestureRecognizers>
+
                                 <Image
                                     Source="{Binding ImageSource}"
                                     HeightRequest="100"

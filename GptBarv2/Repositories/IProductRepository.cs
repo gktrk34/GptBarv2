@@ -9,6 +9,8 @@ namespace GptBarv2.Repositories
         Task<List<ProductModel>> GetAllAsync();
         Task<ProductModel> GetByNameAsync(string name);
         Task<List<ProductModel>> GetSimilarByCategoryAsync(string category, string excludeName);
-        Task UpdateRatingAsync(string name, int rating);
+
+        // Tek satır (ikinciyi silin!)
+        Task UpdateRatingAsync(string productName, int newRating);
     }
 }

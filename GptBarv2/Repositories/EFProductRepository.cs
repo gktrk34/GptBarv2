@@ -34,14 +34,13 @@ namespace GptBarv2.Repositories
                 .ToListAsync();
         }
 
-        public async Task UpdateRatingAsync(string name, int rating)
+        // Tek metot: UpdateRatingAsync(productName, newRating)
+        public async Task UpdateRatingAsync(string productName, int newRating)
         {
-            var product = await _db.Products
-                .FirstOrDefaultAsync(p => p.Name == name);
-
+            var product = await _db.Products.FirstOrDefaultAsync(p => p.Name == productName);
             if (product != null)
             {
-                product.Rating = rating;
+                product.Rating = newRating;
                 _db.Products.Update(product);
                 await _db.SaveChangesAsync();
             }
