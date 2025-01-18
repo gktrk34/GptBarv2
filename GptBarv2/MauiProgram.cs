@@ -39,6 +39,7 @@ public static class MauiProgram
             db.Database.EnsureCreated();
             SeedDatabase(db);
         }
+        builder.Services.AddScoped<IProductRepository, EFProductRepository>();
 
         return app;
     }

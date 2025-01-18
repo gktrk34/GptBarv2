@@ -8,14 +8,14 @@
     Title="{Binding BrandName}">
 
     <Grid RowDefinitions="Auto,*">
-        <!-- Marka logosu (BrandModel.ImageSource) -->
+        <!-- Markanın logosu / görseli -->
         <Image
             Grid.Row="0"
             Source="{Binding BrandImage}"
             Aspect="AspectFit"
             HeightRequest="200" />
 
-        <!-- Markanın ürünleri -->
+        <!-- Markaya ait ürünlerin listesi -->
         <CollectionView
             Grid.Row="1"
             x:Name="ProductsCollectionView"

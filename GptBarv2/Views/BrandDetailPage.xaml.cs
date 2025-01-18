@@ -10,7 +10,7 @@ namespace GptBarv2.Views
     [QueryProperty(nameof(BrandName), "brandName")]
     public partial class BrandDetailPage : ContentPage, INotifyPropertyChanged
     {
-        private readonly IBrandRepository _brandRepository;
+        private readonly IBrandRepository _brandRepo;
 
         private string _brandName;
         public string BrandName
@@ -47,10 +47,11 @@ namespace GptBarv2.Views
 
         public ICommand ProductTappedCommand { get; private set; }
 
-        public BrandDetailPage(IBrandRepository brandRepository)
+        public BrandDetailPage(IBrandRepository brandRepo)
         {
             InitializeComponent();
-            _brandRepository = brandRepository;
+            _brandRepo = brandRepo;
+
             ProductTappedCommand = new Command<ProductModel>(OnProductTapped);
             BindingContext = this;
         }
@@ -59,21 +60,19 @@ namespace GptBarv2.Views
         {
             base.OnAppearing();
 
-            // BrandName QueryProperty ile geliyor
             if (!string.IsNullOrEmpty(BrandName))
             {
-                // Markayý DB'den çek
-                var brand = await _brandRepository.GetByNameAsync(BrandName);
+                // Markayý EF Core'dan çek
+                var brand = await _brandRepo.GetByNameAsync(BrandName);
+                // GetByNameAsync tipik olarak .Include(b => b.Products) diyerek brand.Products'ý da getirir
+
                 if (brand != null)
                 {
-                    // Marka logoyu xaml'de göstermek
                     BrandImage = brand.ImageSource;
-                    // Markanýn ürünlerini listede göstermek
                     Products = new ObservableCollection<ProductModel>(brand.Products);
                 }
                 else
                 {
-                    // brand = null => markaya dair veri yok
                     await DisplayAlert("Uyarý", $"{BrandName} markasý bulunamadý.", "OK");
                 }
             }
@@ -83,7 +82,7 @@ namespace GptBarv2.Views
         {
             if (product != null)
             {
-                // Ürün detay sayfasýna git
+                // Ürün sayfasýna geç
                 string route = $"ProductDetailPage?productName={product.Name}";
                 await Shell.Current.GoToAsync(route);
             }
