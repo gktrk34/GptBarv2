@@ -52,6 +52,12 @@
   <ItemGroup>
     <!-- CommunityToolkit.Maui (Rating vb. kontroller için) -->
     <PackageReference Include="CommunityToolkit.Maui" Version="11.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="9.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="9.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="9.0.1" />
 
     <!-- .NET MAUI Ana Paketleri -->
     <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.30" />
