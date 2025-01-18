@@ -1,12 +1,15 @@
 using Microsoft.Maui.Controls;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
+using GptBarv2.Models;
 
 namespace GptBarv2.Views
 {
     [QueryProperty(nameof(BrandName), "brandName")]
-    public partial class BrandDetailPage : ContentPage
+    public partial class BrandDetailPage : ContentPage, INotifyPropertyChanged
     {
         private string _brandName;
         public string BrandName
@@ -15,8 +18,30 @@ namespace GptBarv2.Views
             set
             {
                 _brandName = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(BrandName));
                 LoadBrandData();
+            }
+        }
+
+        private string _brandImage;
+        public string BrandImage
+        {
+            get => _brandImage;
+            set
+            {
+                _brandImage = value;
+                OnPropertyChanged(nameof(BrandImage));
+            }
+        }
+
+        private ObservableCollection<ProductModel> _products;
+        public ObservableCollection<ProductModel> Products
+        {
+            get => _products;
+            set
+            {
+                _products = value;
+                OnPropertyChanged(nameof(Products));
             }
         }
 
@@ -32,23 +57,26 @@ namespace GptBarv2.Views
 
         private void LoadBrandData()
         {
-            BrandNameLabel.Text = $"Marka: {_brandName}";
+            // BrandNameLabel.Text = $"Marka: {_brandName}"; // Bu satýrý silin
+
+            // Marka logosu atamasý
+            BrandImage = _brandName.ToLower().Replace(" ", "") + ".png";
 
             var allProducts = new List<ProductModel>
-            {
-                new ProductModel { Name = "Gordon's London Dry", Brand = "Gordon's" },
-                new ProductModel { Name = "Gordon's Premium Pink", Brand = "Gordon's" },
-                new ProductModel { Name = "Beefeater London Dry", Brand = "Beefeater" },
-                new ProductModel { Name = "Absolut Original", Brand = "Absolut" },
-                new ProductModel { Name = "Absolut Citron", Brand = "Absolut" },
-                new ProductModel { Name = "Grey Goose Original", Brand = "Grey Goose" },
-            };
+    {
+        new ProductModel { Name = "Gordon's London Dry", Brand = "Gordon's" },
+        new ProductModel { Name = "Gordon's Premium Pink", Brand = "Gordon's" },
+        new ProductModel { Name = "Beefeater London Dry", Brand = "Beefeater" },
+        new ProductModel { Name = "Absolut Original", Brand = "Absolut" },
+        new ProductModel { Name = "Absolut Citron", Brand = "Absolut" },
+        new ProductModel { Name = "Grey Goose Original", Brand = "Grey Goose" },
+    };
 
-            var filtered = allProducts
+            var filteredProducts = allProducts
                 .Where(p => p.Brand == _brandName)
                 .ToList();
 
-            ProductsCollection.ItemsSource = filtered;
+            Products = new ObservableCollection<ProductModel>(filteredProducts);
         }
 
         private async void OnProductTapped(ProductModel product)
@@ -59,11 +87,12 @@ namespace GptBarv2.Views
                 await Shell.Current.GoToAsync(route);
             }
         }
-    }
 
-    public class ProductModel
-    {
-        public string Name { get; set; }
-        public string Brand { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

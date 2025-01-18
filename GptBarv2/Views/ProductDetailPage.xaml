@@ -1,79 +1,139 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage 
-    x:Class="GptBarv2.Views.ProductDetailPage"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    Title="Ürün Detayı">
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:models="clr-namespace:GptBarv2.Models"
+             x:Class="GptBarv2.Views.ProductDetailPage"
+             Title="Ürün Detayı">
 
     <Grid RowDefinitions="Auto,*">
-        <!-- Üstte hero image (bar_hero.jpg) -->
         <Image Grid.Row="0"
+               x:Name="HeroImage"
                Source="bar_hero.jpg"
-               Aspect="AspectFill"
+               Aspect="AspectFit"
                HeightRequest="200" />
 
-        <!-- Alttaki içerik ScrollView içerisinde -->
         <ScrollView Grid.Row="1">
             <VerticalStackLayout Padding="10" Spacing="10">
-                <!-- Ürün adı -->
                 <Label x:Name="ProductNameLabel"
                        Text="Ürün Detayı"
                        FontAttributes="Bold"
                        FontSize="24"
                        HorizontalOptions="Center" />
 
-                <!-- Ürün resmi, burada temsili dotnet_bot.png -->
-                <Image x:Name="ProductImage"
-                       Source="dotnet_bot.png"
-                       HeightRequest="150"
-                       Aspect="AspectFit"
-                       HorizontalOptions="Center" />
+                <BoxView HeightRequest="1" Color="LightGray" HorizontalOptions="Fill" />
 
-                <!-- Basit ürün açıklaması -->
                 <Label x:Name="ProductDescriptionLabel"
                        Text="Ürün hakkında basit açıklama buraya gelecek."
                        FontSize="16"
                        TextColor="Gray"
                        HorizontalOptions="Center" />
 
-                <!-- Favori ve Bar butonları -->
-                <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                    <Button Text="Favorilere Ekle" 
-                            Clicked="OnFavoriteClicked" />
-                    <Button Text="Barıma Ekle" 
-                            Clicked="OnAddToBarClicked" />
+                <Label x:Name="ProductPriceLabel"
+                       Text=""
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center" />
+
+                <HorizontalStackLayout x:Name="RatingContainer"
+                                       Spacing="2"
+                                       HorizontalOptions="Center">
+                    <Image Source="emptystar.png" HeightRequest="32">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnStarTapped" CommandParameter="1" />
+                        </Image.GestureRecognizers>
+                    </Image>
+                    <Image Source="emptystar.png" HeightRequest="32">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnStarTapped" CommandParameter="2" />
+                        </Image.GestureRecognizers>
+                    </Image>
+                    <Image Source="emptystar.png" HeightRequest="32">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnStarTapped" CommandParameter="3" />
+                        </Image.GestureRecognizers>
+                    </Image>
+                    <Image Source="emptystar.png" HeightRequest="32">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnStarTapped" CommandParameter="4" />
+                        </Image.GestureRecognizers>
+                    </Image>
+                    <Image Source="emptystar.png" HeightRequest="32">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnStarTapped" CommandParameter="5" />
+                        </Image.GestureRecognizers>
+                    </Image>
                 </HorizontalStackLayout>
 
-                <!-- Expander: Tadım Notları -->
+                <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                    <Button Text="Favorilere Ekle" Clicked="OnFavoriteClicked" />
+                    <Button Text="Barıma Ekle" Clicked="OnAddToBarClicked" />
+                </HorizontalStackLayout>
+
                 <toolkit:Expander>
                     <toolkit:Expander.Header>
-                        <Label Text="Tadım Notları" 
-                               FontAttributes="Bold" 
-                               FontSize="18" 
+                        <Label Text="Tadım Notları"
+                               FontAttributes="Bold"
+                               FontSize="18"
                                TextColor="DarkBlue" />
                     </toolkit:Expander.Header>
                     <toolkit:Expander.Content>
-                        <Label Text="Bu ürün, yoğun bitkisel notalar, hafif narenciye ve baharat ipuçlarıyla karakterize edilmiştir. Tadım sırasında dengeleyici asidite ve ufak dokunuşlu tatlılık hissedilir." 
-                               FontSize="16" 
+                        <Label x:Name="TastingNotesLabel"
+                               Text=""
+                               FontSize="16"
                                TextColor="Black" />
                     </toolkit:Expander.Content>
                 </toolkit:Expander>
 
-                <!-- Expander: Ek Bilgiler -->
                 <toolkit:Expander>
                     <toolkit:Expander.Header>
-                        <Label Text="Ek Bilgiler" 
-                               FontAttributes="Bold" 
-                               FontSize="18" 
+                        <Label Text="Ek Bilgiler"
+                               FontAttributes="Bold"
+                               FontSize="18"
                                TextColor="DarkBlue" />
                     </toolkit:Expander.Header>
                     <toolkit:Expander.Content>
-                        <Label Text="Bu alanda ürünün üretici bilgileri, alkol oranı, içerik listesi ve önerilen eşleştirmeler gibi bilgiler yer alacaktır." 
-                               FontSize="16" 
+                        <Label x:Name="AdditionalInfoLabel"
+                               Text=""
+                               FontSize="16"
                                TextColor="Black" />
                     </toolkit:Expander.Content>
                 </toolkit:Expander>
+
+                <Label Text="Benzer Ürünler"
+                       FontAttributes="Bold"
+                       FontSize="18"
+                       TextColor="DarkBlue"
+                       Margin="0,20,0,10" />
+
+                <CollectionView x:Name="SimilarProductsCollectionView"
+                                ItemsSource="{Binding SimilarProducts}"
+                                SelectionMode="None"
+                                HeightRequest="200">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Horizontal"
+                                           ItemSpacing="10" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:ProductModel">
+                            <StackLayout>
+                                <Image Source="{Binding ImageSource}"
+                                       HeightRequest="100"
+                                       WidthRequest="100"
+                                       Aspect="AspectFit" />
+                                <Label Text="{Binding Name}"
+                                       HorizontalOptions="Center" />
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <Label x:Name="ProductNotFoundLabel"
+                       Text="Ürün Bulunamadı"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       IsVisible="False" />
 
             </VerticalStackLayout>
         </ScrollView>
