@@ -3,39 +3,28 @@
     x:Class="GptBarv2.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:views="clr-namespace:GptBarv2.Views"
-    Shell.FlyoutBehavior="Flyout"
+    xmlns:local="clr-namespace:GptBarv2.Views"
+    Shell.FlyoutBehavior="Disabled"
     Title="GptBarv2">
 
-    <FlyoutItem Title="Anasayfa" Icon="home.png">
-        <ShellContent
-            Title="Anasayfa"
-            ContentTemplate="{DataTemplate views:HomePage}"
-            Route="HomePage" />
-    </FlyoutItem>
-
-    <FlyoutItem Title="Favoriler" Icon="favorite.png">
-        <ShellContent
-            Title="Favoriler"
-            ContentTemplate="{DataTemplate views:FavoritesPage}"
-            Route="FavoritesPage" />
-    </FlyoutItem>
-
-    <FlyoutItem Title="Welcome Page" Icon="menu_icon.png">
-        <ShellContent
-            Title="Welcome Page"
-            ContentTemplate="{DataTemplate views:WelcomePage}"
-            Route="WelcomePage" />
-    </FlyoutItem>
+    <ShellContent
+        Title="Anasayfa"
+        ContentTemplate="{DataTemplate local:HomePage}"
+        Route="HomePage" />
 
     <ShellContent
-        Title="Category Detail"
-        ContentTemplate="{DataTemplate views:CategoryDetailPage}"
+        Title="Kategori Detay"
+        ContentTemplate="{DataTemplate local:CategoryDetailPage}"
         Route="CategoryDetailPage" />
 
     <ShellContent
-        Title="Brand Detail"
-        ContentTemplate="{DataTemplate views:BrandDetailPage}"
+        Title="Marka Detay"
+        ContentTemplate="{DataTemplate local:BrandDetailPage}"
         Route="BrandDetailPage" />
+
+    <ShellContent
+        Title="Ürün Detay"
+        ContentTemplate="{DataTemplate local:ProductDetailPage}"
+        Route="ProductDetailPage" />
 
 </Shell>

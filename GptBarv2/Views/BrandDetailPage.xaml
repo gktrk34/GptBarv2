@@ -3,53 +3,30 @@
     x:Class="GptBarv2.Views.BrandDetailPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:GptBarv2.Views"
     xmlns:models="clr-namespace:GptBarv2.Models"
     x:Name="BrandDetailPageRoot"
+    x:DataType="local:BrandDetailPage"
     Title="{Binding BrandName}">
-
     <Grid RowDefinitions="Auto,*">
-        <!-- Markanın logosu / görseli -->
-        <Image
-            Grid.Row="0"
-            Source="{Binding BrandImage}"
-            Aspect="AspectFit"
-            HeightRequest="200" />
-
-        <!-- Markaya ait ürünlerin listesi -->
-        <CollectionView
-            Grid.Row="1"
-            x:Name="ProductsCollectionView"
-            ItemsSource="{Binding Products}"
-            SelectionMode="None"
-            Margin="10,0,10,0">
-
+        <!-- Marka logosu -->
+        <Image Grid.Row="0" Source="{Binding BrandImage}" Aspect="AspectFit" HeightRequest="200" />
+        <!-- Markaya ait ürünler -->
+        <CollectionView Grid.Row="1"
+                    x:Name="ProductsCollectionView"
+                    ItemsSource="{Binding Products}"
+                    SelectionMode="None"
+                    Margin="10,0,10,0">
             <CollectionView.ItemsLayout>
                 <LinearItemsLayout Orientation="Vertical" />
             </CollectionView.ItemsLayout>
-
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:ProductModel">
-                    <Border
-                        Stroke="#8B4513"
-                        StrokeThickness="4"
-                        Padding="10"
-                        Margin="5"
-                        StrokeShape="RoundRectangle 10"
-                        HorizontalOptions="FillAndExpand">
-
+                    <Border Stroke="#8B4513" StrokeThickness="4" Padding="10" Margin="5" StrokeShape="RoundRectangle 10" HorizontalOptions="FillAndExpand">
                         <Border.GestureRecognizers>
-                            <TapGestureRecognizer
-                                Command="{Binding BindingContext.ProductTappedCommand, Source={x:Reference BrandDetailPageRoot}}"
-                                CommandParameter="{Binding .}" />
+                            <TapGestureRecognizer Command="{Binding Source={x:Reference BrandDetailPageRoot}, Path=ProductTappedCommand}" CommandParameter="{Binding .}" />
                         </Border.GestureRecognizers>
-
-                        <Label
-                            Text="{Binding Name}"
-                            TextColor="#8B4513"
-                            FontAttributes="Bold"
-                            FontSize="16"
-                            HorizontalTextAlignment="Center"
-                            VerticalOptions="Center" />
+                        <Label Text="{Binding Name}" TextColor="#8B4513" FontAttributes="Bold" FontSize="16" HorizontalTextAlignment="Center" VerticalOptions="Center" />
                     </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

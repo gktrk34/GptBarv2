@@ -1,37 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using GptBarv2.Data;
+using GptBarv2.Models;
+using GptBarv2.Repositories;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using GptBarv2.Data;
-using GptBarv2.Models;
 
-namespace GptBarv2.Repositories
+public class EFBrandRepository : IBrandRepository
 {
-    public class EFBrandRepository : IBrandRepository
+    private readonly AppDbContext _context;
+
+    public EFBrandRepository(AppDbContext context)
     {
-        private readonly AppDbContext _db;
+        _context = context;
+    }
 
-        public EFBrandRepository(AppDbContext db)
-        {
-            _db = db;
-        }
+    public async Task<List<BrandModel>> GetAllByCategoryAsync(string categoryName)
+    {
+        return await _context.Brands
+            .Where(b => b.Category == categoryName)
+            .ToListAsync();
+    }
 
-        public async Task<BrandModel> GetByNameAsync(string brandName)
-        {
-            // marka + ürünler
-            return await _db.Brands
-                .Include(b => b.Products)
-                .FirstOrDefaultAsync(b => b.Name == brandName);
-        }
-
-        // Yeni eklenen metot
-        public async Task<List<BrandModel>> GetAllByCategoryAsync(string category)
-        {
-            // Bu sorgu, EF Core ile "category" alanı eşleşen markaları getirir.
-            return await _db.Brands
-                .Where(b => b.Category == category)
-                .Include(b => b.Products)  // Markaların ürünlerini de yüklemek istersek
-                .ToListAsync();
-        }
+    public async Task<BrandModel?> GetByNameAsync(string name)
+    {
+        return await _context.Brands
+            .Include(b => b.Products)
+            .FirstOrDefaultAsync(b => b.Name == name);
     }
 }

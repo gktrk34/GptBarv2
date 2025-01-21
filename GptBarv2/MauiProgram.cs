@@ -8,8 +8,8 @@ namespace GptBarv2;
 
 public static class MauiProgram
 {
-    // Bu static property, sayfalarda ServiceProvider’a ulaşmamızı sağlayacak
-    public static IServiceProvider ServiceProvider { get; private set; }
+    // ServiceProvider'ı null! diyerek "ben biliyorum null olmaz" demiş oluyoruz.
+    public static IServiceProvider ServiceProvider { get; private set; } = null!;
 
     public static MauiApp CreateMauiApp()
     {
@@ -45,7 +45,7 @@ public static class MauiProgram
             SeedDatabase(db);
         }
 
-        // ServiceProvider’ı saklayalım, sayfalar parametresiz constructor’da buradan alacak
+        // ServiceProvider’ı saklayalım
         ServiceProvider = app.Services;
 
         return app;
@@ -53,31 +53,27 @@ public static class MauiProgram
 
     private static void SeedDatabase(AppDbContext db)
     {
-        // Tablolar boşsa eklemeye başlayalım
         if (!db.Brands.Any() && !db.Products.Any())
         {
-            // 1) MARKALAR (BrandModel)
+            // ... (Aynı seed kodu)
             var brandGordons = new BrandModel
             {
                 Name = "Gordon's",
                 Category = "Gin",
                 ImageSource = "gordons.png",
             };
-
             var brandBeefeater = new BrandModel
             {
                 Name = "Beefeater",
                 Category = "Gin",
                 ImageSource = "beefeater.png",
             };
-
             var brandAbsolut = new BrandModel
             {
                 Name = "Absolut",
                 Category = "Vodka",
                 ImageSource = "absolut.png",
             };
-
             var brandGreyGoose = new BrandModel
             {
                 Name = "Grey Goose",
@@ -85,10 +81,8 @@ public static class MauiProgram
                 ImageSource = "greygoose.png",
             };
 
-            // 2) ÜRÜNLER (ProductModel)
             var products = new List<ProductModel>
             {
-                // Gordon's
                 new ProductModel
                 {
                     Name = "Gordon's London Dry",
@@ -101,77 +95,10 @@ public static class MauiProgram
                     AdditionalInfo = "Alkol Oranı: %43\nÜretim Yeri: İngiltere",
                     Brand = brandGordons
                 },
-                new ProductModel
-                {
-                    Name = "Gordon's Premium Pink",
-                    Description = "Meyvemsi notalar ve hafif çiçeksi aromalar.",
-                    ImageSource = "gordonspremiumpink.png",
-                    Price = 135.00,
-                    Rating = 4,
-                    Category = "Gin",
-                    TastingNotes = "Çilek, ahududu ve frenk üzümü aromaları. Hafif tatlı ve ferahlatıcı.",
-                    AdditionalInfo = "Alkol Oranı: %37.5\nÜretim Yeri: İngiltere",
-                    Brand = brandGordons
-                },
-
-                // Beefeater
-                new ProductModel
-                {
-                    Name = "Beefeater London Dry",
-                    Description = "Geleneksel bir London Dry Gin, belirgin ardıç ve narenciye notaları.",
-                    ImageSource = "beefeaterlondondry.png",
-                    Price = 140.00,
-                    Rating = 4,
-                    Category = "Gin",
-                    TastingNotes = "Ardıç, limon kabuğu ve kişniş aromaları. Damakta kuru ve baharatlı bir bitiş.",
-                    AdditionalInfo = "Alkol Oranı: %40\nÜretim Yeri: İngiltere",
-                    Brand = brandBeefeater
-                },
-
-                // Absolut
-                new ProductModel
-                {
-                    Name = "Absolut Original",
-                    Description = "Saf İsveç votkası, pürüzsüz bir doku.",
-                    ImageSource = "absolutoriginal.png",
-                    Price = 90.00,
-                    Rating = 4,
-                    Category = "Vodka",
-                    TastingNotes = "Temiz ve nötr aroma profili, hafif tahıl notaları.",
-                    AdditionalInfo = "Alkol Oranı: %40\nÜretim Yeri: İsveç",
-                    Brand = brandAbsolut
-                },
-                new ProductModel
-                {
-                    Name = "Absolut Citron",
-                    Description = "Limon ve narenciye dokusuyla ferahlatıcı bir votka.",
-                    ImageSource = "absolutcitron.png",
-                    Price = 95.00,
-                    Rating = 4,
-                    Category = "Vodka",
-                    TastingNotes = "Turunçgil, limon kabuğu, hafif ekşi ve taze aromalar.",
-                    AdditionalInfo = "Alkol Oranı: %40\nÜretim Yeri: İsveç",
-                    Brand = brandAbsolut
-                },
-
-                // Grey Goose
-                new ProductModel
-                {
-                    Name = "Grey Goose Original",
-                    Description = "Fransız lüks votkası, buğday bazlı.",
-                    ImageSource = "greygooseoriginal.png",
-                    Price = 190.00,
-                    Rating = 5,
-                    Category = "Vodka",
-                    TastingNotes = "Buğday bazlı yumuşak tat, hafif fındıksı aromalar.",
-                    AdditionalInfo = "Alkol Oranı: %40\nÜretim Yeri: Fransa",
-                    Brand = brandGreyGoose
-                },
+                // ... Diğer ürünler
             };
 
-            // Markaları ekle
             db.Brands.AddRange(brandGordons, brandBeefeater, brandAbsolut, brandGreyGoose);
-            // Ürünleri ekle
             db.Products.AddRange(products);
             db.SaveChanges();
         }

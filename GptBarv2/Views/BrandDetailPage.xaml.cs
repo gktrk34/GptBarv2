@@ -7,12 +7,12 @@ using System.Windows.Input;
 
 namespace GptBarv2.Views
 {
-    [QueryProperty(nameof(BrandName), "brandName")]
+    [QueryProperty(nameof(BrandName), "brandname")]
     public partial class BrandDetailPage : ContentPage, INotifyPropertyChanged
     {
         private readonly IBrandRepository _brandRepo;
 
-        private string _brandName;
+        private string _brandName = string.Empty;
         public string BrandName
         {
             get => _brandName;
@@ -23,7 +23,7 @@ namespace GptBarv2.Views
             }
         }
 
-        private string _brandImage;
+        private string _brandImage = string.Empty;
         public string BrandImage
         {
             get => _brandImage;
@@ -47,11 +47,17 @@ namespace GptBarv2.Views
 
         public ICommand ProductTappedCommand { get; private set; }
 
+        public new event PropertyChangedEventHandler? PropertyChanged; //new anahtar kelimesi ile tanýmlayýn
+
+        protected override void OnPropertyChanged(string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public BrandDetailPage(IBrandRepository brandRepo)
         {
             InitializeComponent();
             _brandRepo = brandRepo;
-
             ProductTappedCommand = new Command<ProductModel>(OnProductTapped);
             BindingContext = this;
         }
@@ -59,13 +65,9 @@ namespace GptBarv2.Views
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-
             if (!string.IsNullOrEmpty(BrandName))
             {
-                // Markayý EF Core'dan çek
                 var brand = await _brandRepo.GetByNameAsync(BrandName);
-                // GetByNameAsync tipik olarak .Include(b => b.Products) diyerek brand.Products'ý da getirir
-
                 if (brand != null)
                 {
                     BrandImage = brand.ImageSource;
@@ -82,16 +84,11 @@ namespace GptBarv2.Views
         {
             if (product != null)
             {
-                // Ürün sayfasýna geç
-                string route = $"ProductDetailPage?productName={product.Name}";
+                string route = $"ProductDetailPage?productname={product.Name}";
                 await Shell.Current.GoToAsync(route);
             }
         }
 
-        public new event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged(string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+       
     }
 }

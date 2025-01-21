@@ -6,10 +6,7 @@ namespace GptBarv2.Repositories
 {
     public interface IBrandRepository
     {
-        // Tek bir markayı ismine göre getir
-        Task<BrandModel> GetByNameAsync(string brandName);
-
-        // Kategorisine göre tüm markaları getir
-        Task<List<BrandModel>> GetAllByCategoryAsync(string category);
+        Task<List<BrandModel>> GetAllByCategoryAsync(string categoryName);
+        Task<BrandModel?> GetByNameAsync(string name);
     }
 }

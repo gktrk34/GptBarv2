@@ -1,20 +1,15 @@
-﻿using Microsoft.Maui.Controls;
+﻿using GptBarv2.Views;
 
-namespace GptBarv2
+namespace GptBarv2;
+
+public partial class AppShell : Shell
 {
-    public partial class AppShell : Shell
+    public AppShell()
     {
-        public AppShell()
-        {
-            InitializeComponent();
+        InitializeComponent();
 
-            // İleride rota (Route) tanımlamak istersen:
-            // Routing.RegisterRoute("BrandDetailPage", typeof(BrandDetailPage));
-            Routing.RegisterRoute("CategoryDetailPage", typeof(GptBarv2.Views.CategoryDetailPage));
-            Routing.RegisterRoute("BrandDetailPage", typeof(GptBarv2.Views.BrandDetailPage));
-            Routing.RegisterRoute("ProductDetailPage", typeof(GptBarv2.Views.ProductDetailPage));
-
-
-        }
+        Routing.RegisterRoute("CategoryDetailPage", typeof(CategoryDetailPage));
+        Routing.RegisterRoute("BrandDetailPage", typeof(BrandDetailPage));
+        Routing.RegisterRoute("ProductDetailPage", typeof(ProductDetailPage));
     }
 }

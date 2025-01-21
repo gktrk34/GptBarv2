@@ -3,59 +3,47 @@
     x:Class="GptBarv2.Views.CategoryDetailPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:GptBarv2.Views"
     xmlns:models="clr-namespace:GptBarv2.Models"
     x:Name="CategoryDetailPageRoot"
+    x:DataType="local:CategoryDetailPage"
     Title="{Binding CategoryName}">
 
     <Grid RowDefinitions="Auto,*">
-
         <!-- Arama Çubuğu -->
-        <SearchBar
-            Grid.Row="0"
-            x:Name="searchBar"
-            Placeholder="Marka Ara"
-            TextChanged="OnSearchTextChanged" />
+        <SearchBar Grid.Row="0"
+               x:Name="searchBar"
+               Placeholder="Marka Ara"
+               TextChanged="OnSearchTextChanged" />
 
         <!-- Markaların listelendiği CollectionView -->
-        <CollectionView
-            Grid.Row="1"
-            x:Name="BrandsCollectionView"
-            ItemsSource="{Binding Brands}"
-            SelectionMode="None"
-            Margin="10,0,10,0">
-
+        <CollectionView Grid.Row="1"
+                    x:Name="BrandsCollectionView"
+                    ItemsSource="{Binding Brands}"
+                    SelectionMode="None"
+                    Margin="10,0,10,0">
             <CollectionView.ItemsLayout>
                 <LinearItemsLayout Orientation="Vertical" />
             </CollectionView.ItemsLayout>
-
             <CollectionView.ItemTemplate>
+                <!-- DataTemplate, BrandModel'e göre derlenecek -->
                 <DataTemplate x:DataType="models:BrandModel">
-                    <Border
-                        Stroke="#8B4513"
-                        StrokeThickness="4"
-                        Padding="10"
-                        Margin="5"
-                        StrokeShape="RoundRectangle 10"
-                        HorizontalOptions="FillAndExpand">
-
+                    <Border Stroke="#8B4513" StrokeThickness="4" Padding="10" Margin="5" StrokeShape="RoundRectangle 10" HorizontalOptions="FillAndExpand">
                         <Border.GestureRecognizers>
-                            <TapGestureRecognizer
-                                Command="{Binding BindingContext.BrandTappedCommand, Source={x:Reference CategoryDetailPageRoot}}"
-                                CommandParameter="{Binding .}" />
+                            <!-- Parent sayfadaki BrandTappedCommand'a ulaşmak için: -->
+                            <TapGestureRecognizer Command="{Binding Source={x:Reference CategoryDetailPageRoot}, Path=BrandTappedCommand}"
+                                    CommandParameter="{Binding .}" />
                         </Border.GestureRecognizers>
-
-                        <Label
-                            Text="{Binding Name}"
-                            TextColor="#8B4513"
-                            FontAttributes="Bold"
-                            FontSize="16"
-                            HorizontalTextAlignment="Center"
-                            VerticalOptions="Center"
-                            VerticalTextAlignment="Center" />
+                        <Label Text="{Binding Name}"
+                   TextColor="#8B4513"
+                   FontAttributes="Bold"
+                   FontSize="16"
+                   HorizontalTextAlignment="Center"
+                   VerticalOptions="Center"
+                   VerticalTextAlignment="Center" />
                     </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-
     </Grid>
 </ContentPage>
