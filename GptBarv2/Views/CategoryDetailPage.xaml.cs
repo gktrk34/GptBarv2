@@ -37,14 +37,11 @@ namespace GptBarv2.Views
             }
         }
 
-        public ICommand BrandTappedCommand { get; private set; }
-
         public CategoryDetailPage(IBrandRepository brandRepository)
         {
             InitializeComponent();
             _brandRepository = brandRepository;
 
-            BrandTappedCommand = new Command<BrandModel>(OnBrandTapped);
             BindingContext = this;
         }
 
@@ -67,9 +64,9 @@ namespace GptBarv2.Views
             }
         }
 
-        private async void OnBrandTapped(BrandModel brand)
+        private async void OnBrandTapped(object sender, TappedEventArgs e)
         {
-            if (brand != null)
+            if (sender is Element element && element.BindingContext is BrandModel brand)
             {
                 await Shell.Current.GoToAsync($"{nameof(BrandDetailPage)}?brandName={brand.Name}");
             }
@@ -94,7 +91,7 @@ namespace GptBarv2.Views
 
         public new event PropertyChangedEventHandler? PropertyChanged;
 
-        protected override void OnPropertyChanged(string propertyName = "")
+        protected override void OnPropertyChanged(string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

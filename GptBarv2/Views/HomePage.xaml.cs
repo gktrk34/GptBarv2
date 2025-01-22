@@ -1,6 +1,7 @@
 using Microsoft.Maui.Controls;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using GptBarv2.Models;
 
 namespace GptBarv2.Views
 {
@@ -12,6 +13,7 @@ namespace GptBarv2.Views
         public HomePage()
         {
             InitializeComponent();
+
             Categories = new ObservableCollection<CategoryModel>
             {
                 new CategoryModel { Name = "Gin", ImageSource = "gin.png" },
@@ -26,7 +28,9 @@ namespace GptBarv2.Views
                 new CategoryModel { Name = "Absent", ImageSource = "absent.png" },
                 new CategoryModel { Name = "Diðer", ImageSource = "diger.png" }
             };
+
             CategoryTappedCommand = new Command<CategoryModel>(OnCategoryTapped);
+
             BindingContext = this;
         }
 

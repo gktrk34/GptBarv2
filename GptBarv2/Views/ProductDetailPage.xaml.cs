@@ -1,10 +1,9 @@
+using GptBarv2.Models;
+using GptBarv2.Repositories;
 using Microsoft.Maui.Controls;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Input;
-using GptBarv2.Models;
-using GptBarv2.Repositories;
 
 namespace GptBarv2.Views
 {
@@ -13,7 +12,7 @@ namespace GptBarv2.Views
     {
         private readonly IProductRepository _productRepo;
 
-        private string _productName = string.Empty;
+        private string _productName;
         public string ProductName
         {
             get => _productName;
@@ -21,76 +20,43 @@ namespace GptBarv2.Views
             {
                 _productName = value;
                 OnPropertyChanged();
-                LoadProduct();
             }
         }
 
-        private string _brandImage = string.Empty;
-        public string BrandImage
+        private ObservableCollection<ProductModel> _similarProducts = new();
+        public ObservableCollection<ProductModel> SimilarProducts
         {
-            get => _brandImage;
+            get => _similarProducts;
             set
             {
-                _brandImage = value;
-                OnPropertyChanged(nameof(BrandImage));
+                _similarProducts = value;
+                OnPropertyChanged(nameof(SimilarProducts));
             }
         }
 
-        private ObservableCollection<ProductModel> _products = new ObservableCollection<ProductModel>();
-        public ObservableCollection<ProductModel> Products
-        {
-            get => _products;
-            set
-            {
-                _products = value;
-                OnPropertyChanged(nameof(Products));
-            }
-        }
-
-        public ObservableCollection<ProductModel> SimilarProducts { get; set; } = new ObservableCollection<ProductModel>();
-
-        public ICommand ProductTappedCommand { get; private set; }
-
+        private ProductModel _currentProduct;
         private int _currentRating = 0;
 
-        public ProductDetailPage(IProductRepository productRepository)
+        // Benzer ürüne týklama event handler'ý
+        private async void OnSimilarProductTapped(object sender, System.EventArgs e)
+        {
+            if (sender is BindableObject tappedObject && tappedObject.BindingContext is ProductModel tappedProduct)
+            {
+                // Önce mevcut sayfadan pop yapýp (geri gitmeden) sonra yeni ürünü gösterelim.
+                await Shell.Current.GoToAsync("..", false);
+                await Shell.Current.GoToAsync($"ProductDetailPage?productName={tappedProduct.Name}", false);
+            }
+        }
+
+        public ProductDetailPage()
         {
             InitializeComponent();
 
-            _productRepo = productRepository;
-            ProductTappedCommand = new Command<ProductModel>(OnProductTapped);
+            // DI (Dependency Injection) kullanarak IProductRepository örneðini alýyoruz
+            _productRepo = MauiProgram.ServiceProvider.GetRequiredService<IProductRepository>();
+
+            // BindingContext'i kendimize set ediyoruz
             BindingContext = this;
-
-        }
-
-        private async void LoadProduct()
-        {
-            if (!string.IsNullOrEmpty(ProductName))
-            {
-                var product = await _productRepo.GetByNameAsync(ProductName);
-                if (product != null)
-                {
-                    ProductNameLabel.Text = product.Name;
-                    HeroImage.Source = product.ImageSource;
-                    ProductDescriptionLabel.Text = product.Description;
-                    ProductPriceLabel.Text = $"{product.Price:C}";
-                    _currentRating = product.Rating;
-                    UpdateRatingStars();
-                    TastingNotesLabel.Text = product.TastingNotes;
-                    AdditionalInfoLabel.Text = product.AdditionalInfo;
-                    ProductNotFoundLabel.IsVisible = false;
-
-                    var similarList = await _productRepo.GetSimilarByCategoryAsync(product.Category, product.Name);
-                    if (similarList != null && similarList.Any())
-                    {
-                        SimilarProducts = new ObservableCollection<ProductModel>(similarList);
-                    }
-                    else
-                    {
-                        ProductNotFoundLabel.IsVisible = true;
-                    }
-                }
-            }
         }
 
         protected override async void OnAppearing()
@@ -102,26 +68,34 @@ namespace GptBarv2.Views
                 var product = await _productRepo.GetByNameAsync(ProductName);
                 if (product != null)
                 {
+                    _currentProduct = product;
 
                     ProductNameLabel.Text = product.Name;
                     HeroImage.Source = product.ImageSource;
                     ProductDescriptionLabel.Text = product.Description;
                     ProductPriceLabel.Text = $"{product.Price:C}";
+
                     _currentRating = product.Rating;
+                    System.Diagnostics.Debug.WriteLine($"[OnAppearing] Loaded product Rating = {_currentRating}");
                     UpdateRatingStars();
+
                     TastingNotesLabel.Text = product.TastingNotes;
                     AdditionalInfoLabel.Text = product.AdditionalInfo;
                     ProductNotFoundLabel.IsVisible = false;
 
+                    // Benzer ürünleri veritabanýndan çekiyoruz
                     var similarList = await _productRepo.GetSimilarByCategoryAsync(product.Category, product.Name);
                     if (similarList != null && similarList.Any())
                     {
                         SimilarProducts = new ObservableCollection<ProductModel>(similarList);
                     }
-                    else
-                    {
-                        ProductNotFoundLabel.IsVisible = true;
-                    }
+                }
+                else
+                {
+                    ProductNameLabel.Text = "Ürün Bulunamadý";
+                    ProductDescriptionLabel.Text = "";
+                    HeroImage.Source = "bar_hero.jpg";
+                    ProductNotFoundLabel.IsVisible = true;
                 }
             }
         }
@@ -136,28 +110,28 @@ namespace GptBarv2.Views
             DisplayAlert("Barým", $"{ProductName} barýna eklendi!", "OK");
         }
 
-        private async void OnProductTapped(ProductModel product)
+        // Yýldýz týklama event handler'ý
+        private async void OnStarTapped(object sender, TappedEventArgs e)
         {
-            if (product != null)
+            if (e.Parameter is string starCountString && int.TryParse(starCountString, out int starCount))
             {
-                await Shell.Current.GoToAsync($"{nameof(ProductDetailPage)}?productName={product.Name}", false);
-            }
-        }
+                System.Diagnostics.Debug.WriteLine($"[OnStarTapped] starCount = {starCount}");
+                await DisplayAlert("Rating", $"Tapped star: {starCount}", "OK");
 
-        private void OnStarTapped(object sender, TappedEventArgs e)
-        {
-            if (e.Parameter is int starCount)
-            {
                 _currentRating = starCount;
                 UpdateRatingStars();
 
-                // Mevcut ürünü Products koleksiyonunda bul ve Rating özelliðini güncelle
-                var product = Products.FirstOrDefault(p => p.Name == _productName);
-                if (product != null)
+                await _productRepo.UpdateRatingAsync(ProductName, starCount);
+                System.Diagnostics.Debug.WriteLine($"[OnStarTapped] DB updated rating to {starCount}");
+
+                if (_currentProduct != null)
                 {
-                    product.Rating = _currentRating;
-                    OnPropertyChanged(nameof(Products)); // Bu, deðiþikliði arayüze bildirecek
+                    _currentProduct.Rating = starCount;
                 }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("[OnStarTapped] Parameter not valid");
             }
         }
 
@@ -170,11 +144,11 @@ namespace GptBarv2.Views
                 star.Source = index < _currentRating ? "fullstar.png" : "emptystar.png";
                 index++;
             }
+            System.Diagnostics.Debug.WriteLine($"[UpdateRatingStars] Current rating = {_currentRating}. Updated images.");
         }
 
-        public new event PropertyChangedEventHandler? PropertyChanged;
-
-        protected new virtual void OnPropertyChanged(string? propertyName = null)
+        public new event PropertyChangedEventHandler PropertyChanged;
+        protected override void OnPropertyChanged(string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

@@ -7,12 +7,12 @@ using System.Windows.Input;
 
 namespace GptBarv2.Views
 {
-    [QueryProperty(nameof(BrandName), "brandname")]
+    [QueryProperty(nameof(BrandName), "brandName")]
     public partial class BrandDetailPage : ContentPage, INotifyPropertyChanged
     {
         private readonly IBrandRepository _brandRepo;
 
-        private string _brandName = string.Empty;
+        private string _brandName;
         public string BrandName
         {
             get => _brandName;
@@ -23,7 +23,7 @@ namespace GptBarv2.Views
             }
         }
 
-        private string _brandImage = string.Empty;
+        private string _brandImage;
         public string BrandImage
         {
             get => _brandImage;
@@ -45,29 +45,21 @@ namespace GptBarv2.Views
             }
         }
 
-        public ICommand ProductTappedCommand { get; private set; }
-
-        public new event PropertyChangedEventHandler? PropertyChanged; //new anahtar kelimesi ile tanýmlayýn
-
-        protected override void OnPropertyChanged(string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         public BrandDetailPage(IBrandRepository brandRepo)
         {
             InitializeComponent();
             _brandRepo = brandRepo;
-            ProductTappedCommand = new Command<ProductModel>(OnProductTapped);
             BindingContext = this;
         }
 
         protected override async void OnAppearing()
         {
             base.OnAppearing();
+
             if (!string.IsNullOrEmpty(BrandName))
             {
                 var brand = await _brandRepo.GetByNameAsync(BrandName);
+
                 if (brand != null)
                 {
                     BrandImage = brand.ImageSource;
@@ -80,15 +72,18 @@ namespace GptBarv2.Views
             }
         }
 
-        private async void OnProductTapped(ProductModel product)
+        private async void OnProductTapped(object sender, TappedEventArgs e)
         {
-            if (product != null)
+            if (sender is Element element && element.BindingContext is ProductModel product)
             {
-                string route = $"ProductDetailPage?productname={product.Name}";
-                await Shell.Current.GoToAsync(route);
+                await Shell.Current.GoToAsync($"{nameof(ProductDetailPage)}?productName={product.Name}");
             }
         }
 
-       
+        public new event PropertyChangedEventHandler? PropertyChanged;
+        protected override void OnPropertyChanged(string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

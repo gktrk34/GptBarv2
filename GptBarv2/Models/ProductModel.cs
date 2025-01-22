@@ -8,17 +8,17 @@ namespace GptBarv2.Models
         [Key]
         public int Id { get; set; }
 
-        public string Name { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
-        public string ImageSource { get; set; } = string.Empty;
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string ImageSource { get; set; }
         public double Price { get; set; }
         public int Rating { get; set; }
-        public string Category { get; set; } = string.Empty;
-        public string TastingNotes { get; set; } = string.Empty;
-        public string AdditionalInfo { get; set; } = string.Empty;
+        public string Category { get; set; }
+        public string TastingNotes { get; set; }
+        public string AdditionalInfo { get; set; }
 
         // Marka ilişkisi
         public int BrandId { get; set; }
-        public BrandModel? Brand { get; set; } // Navigation property
+        public BrandModel Brand { get; set; } // Navigation property
     }
 }

@@ -1,40 +1,49 @@
-﻿using GptBarv2.Data;
-using GptBarv2.Models;
-using GptBarv2.Repositories;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using GptBarv2.Data;
+using GptBarv2.Models;
 
-public class EFProductRepository : IProductRepository
+namespace GptBarv2.Repositories
 {
-    private readonly AppDbContext _context;
+    public class EFProductRepository : IProductRepository
+    {
+        private readonly AppDbContext _db;
 
-    public EFProductRepository(AppDbContext context)
-    {
-        _context = context;
-    }
+        public EFProductRepository(AppDbContext db)
+        {
+            _db = db;
+        }
 
-    public async Task<List<ProductModel>> GetAllAsync()
-    {
-        return await _context.Products.ToListAsync();
-    }
+        public async Task<List<ProductModel>> GetAllAsync()
+        {
+            return await _db.Products.ToListAsync();
+        }
 
-    public async Task<ProductModel?> GetByNameAsync(string name)
-    {
-        return await _context.Products
-            .Include(p => p.Brand)
-            .FirstOrDefaultAsync(p => p.Name == name);
-    }
-    public async Task<List<ProductModel>> GetSimilarByCategoryAsync(string category, string productName)
-    {
-        return await _context.Products
-            .Where(p => p.Category == category && p.Name != productName)
-            .ToListAsync();
-    }
+        public async Task<ProductModel> GetByNameAsync(string name)
+        {
+            return await _db.Products
+                .FirstOrDefaultAsync(p => p.Name == name);
+        }
 
-    public Task UpdateRatingAsync(string productName, int rating)
-    {
-        throw new NotImplementedException();
+        public async Task<List<ProductModel>> GetSimilarByCategoryAsync(string category, string excludeName)
+        {
+            return await _db.Products
+                .Where(p => p.Category == category && p.Name != excludeName)
+                .ToListAsync();
+        }
+
+        // Tek metot: UpdateRatingAsync(productName, newRating)
+        public async Task UpdateRatingAsync(string productName, int newRating)
+        {
+            var product = await _db.Products.FirstOrDefaultAsync(p => p.Name == productName);
+            if (product != null)
+            {
+                product.Rating = newRating;
+                _db.Products.Update(product);
+                await _db.SaveChangesAsync();
+            }
+        }
     }
 }
