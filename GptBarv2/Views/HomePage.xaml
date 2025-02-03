@@ -3,243 +3,49 @@
     x:Class="GptBarv2.Views.HomePage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:GptBarv2.Views"
     xmlns:models="clr-namespace:GptBarv2.Models"
+    xmlns:vm="clr-namespace:GptBarv2.ViewModels"
     x:Name="HomePageRoot"
-    x:DataType="local:HomePage"
+    x:DataType="vm:HomeViewModel"
     Title="Anasayfa">
-
     <Grid RowDefinitions="Auto,*">
         <!-- Üst hero görseli -->
-        <Image Grid.Row="0"
-               Source="bar_hero.jpg"
-               Aspect="AspectFill"
-               HeightRequest="200" />
-
-        <!-- Kategori kartlarının yer aldığı ScrollView -->
-        <ScrollView Grid.Row="1">
-            <Grid ColumnDefinitions="*,*"
-                  RowDefinitions="120,120,120,120,120,120"
-                  RowSpacing="10"
-                  ColumnSpacing="10"
-                  Padding="20">
-
-                <!-- Row 0 -->
-                <Border Grid.Column="0" Grid.Row="0"
-                        BackgroundColor="Transparent"
-                        Stroke="#8B4513"
-                        StrokeThickness="4"
-                        Padding="0"
-                        StrokeShape="RoundRectangle 10">
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer 
-                            Command="{Binding CategoryTappedCommand}" 
-                            CommandParameter="{Binding Categories[0]}" />
-                    </Border.GestureRecognizers>
-                    <VerticalStackLayout HorizontalOptions="Center"
-                                         VerticalOptions="Center"
-                                         Spacing="0">
-                        <Image Source="gin.png" WidthRequest="60" HeightRequest="60" />
-                        <Label Text="Gin" TextColor="#8B4513" FontAttributes="Bold" FontSize="16" HorizontalTextAlignment="Center" Margin="0,5,0,0" />
-                    </VerticalStackLayout>
-                </Border>
-
-                <Border Grid.Column="1" Grid.Row="0"
-                        BackgroundColor="Transparent"
-                        Stroke="#8B4513"
-                        StrokeThickness="4"
-                        Padding="0"
-                        StrokeShape="RoundRectangle 10">
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer 
-                            Command="{Binding CategoryTappedCommand}" 
-                            CommandParameter="{Binding Categories[1]}" />
-                    </Border.GestureRecognizers>
-                    <VerticalStackLayout HorizontalOptions="Center"
-                                         VerticalOptions="Center"
-                                         Spacing="0">
-                        <Image Source="vodka.png" WidthRequest="60" HeightRequest="60" />
-                        <Label Text="Vodka" TextColor="#8B4513" FontAttributes="Bold" FontSize="16" HorizontalTextAlignment="Center" Margin="0,5,0,0" />
-                    </VerticalStackLayout>
-                </Border>
-
-                <!-- Row 1 -->
-                <Border Grid.Column="0" Grid.Row="1"
-                        BackgroundColor="Transparent"
-                        Stroke="#8B4513"
-                        StrokeThickness="4"
-                        Padding="0"
-                        StrokeShape="RoundRectangle 10">
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer 
-                            Command="{Binding CategoryTappedCommand}" 
-                            CommandParameter="{Binding Categories[2]}" />
-                    </Border.GestureRecognizers>
-                    <VerticalStackLayout HorizontalOptions="Center"
-                                         VerticalOptions="Center"
-                                         Spacing="0">
-                        <Image Source="whiskey.png" WidthRequest="60" HeightRequest="60" />
-                        <Label Text="Whiskey" TextColor="#8B4513" FontAttributes="Bold" FontSize="16" HorizontalTextAlignment="Center" Margin="0,5,0,0" />
-                    </VerticalStackLayout>
-                </Border>
-
-                <Border Grid.Column="1" Grid.Row="1"
-                        BackgroundColor="Transparent"
-                        Stroke="#8B4513"
-                        StrokeThickness="4"
-                        Padding="0"
-                        StrokeShape="RoundRectangle 10">
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer 
-                            Command="{Binding CategoryTappedCommand}" 
-                            CommandParameter="{Binding Categories[3]}" />
-                    </Border.GestureRecognizers>
-                    <VerticalStackLayout HorizontalOptions="Center"
-                                         VerticalOptions="Center"
-                                         Spacing="0">
-                        <Image Source="tekila.png" WidthRequest="60" HeightRequest="60" />
-                        <Label Text="Tekila" TextColor="#8B4513" FontAttributes="Bold" FontSize="16" HorizontalTextAlignment="Center" Margin="0,5,0,0" />
-                    </VerticalStackLayout>
-                </Border>
-
-                <!-- Row 2 -->
-                <Border Grid.Column="0" Grid.Row="2"
-                        BackgroundColor="Transparent"
-                        Stroke="#8B4513"
-                        StrokeThickness="4"
-                        Padding="0"
-                        StrokeShape="RoundRectangle 10">
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer 
-                            Command="{Binding CategoryTappedCommand}" 
-                            CommandParameter="{Binding Categories[4]}" />
-                    </Border.GestureRecognizers>
-                    <VerticalStackLayout HorizontalOptions="Center"
-                                         VerticalOptions="Center"
-                                         Spacing="0">
-                        <Image Source="rom.png" WidthRequest="60" HeightRequest="60" />
-                        <Label Text="Rom" TextColor="#8B4513" FontAttributes="Bold" FontSize="16" HorizontalTextAlignment="Center" Margin="0,5,0,0" />
-                    </VerticalStackLayout>
-                </Border>
-
-                <Border Grid.Column="1" Grid.Row="2"
-                        BackgroundColor="Transparent"
-                        Stroke="#8B4513"
-                        StrokeThickness="4"
-                        Padding="0"
-                        StrokeShape="RoundRectangle 10">
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer 
-                            Command="{Binding CategoryTappedCommand}" 
-                            CommandParameter="{Binding Categories[5]}" />
-                    </Border.GestureRecognizers>
-                    <VerticalStackLayout HorizontalOptions="Center"
-                                         VerticalOptions="Center"
-                                         Spacing="0">
-                        <Image Source="vermut.png" WidthRequest="60" HeightRequest="60" />
-                        <Label Text="Vermut" TextColor="#8B4513" FontAttributes="Bold" FontSize="16" HorizontalTextAlignment="Center" Margin="0,5,0,0" />
-                    </VerticalStackLayout>
-                </Border>
-
-                <!-- Row 3 -->
-                <Border Grid.Column="0" Grid.Row="3"
-                        BackgroundColor="Transparent"
-                        Stroke="#8B4513"
-                        StrokeThickness="4"
-                        Padding="0"
-                        StrokeShape="RoundRectangle 10">
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer 
-                            Command="{Binding CategoryTappedCommand}" 
-                            CommandParameter="{Binding Categories[6]}" />
-                    </Border.GestureRecognizers>
-                    <VerticalStackLayout HorizontalOptions="Center"
-                                         VerticalOptions="Center"
-                                         Spacing="0">
-                        <Image Source="likor.png" WidthRequest="60" HeightRequest="60" />
-                        <Label Text="Likör" TextColor="#8B4513" FontAttributes="Bold" FontSize="16" HorizontalTextAlignment="Center" Margin="0,5,0,0" />
-                    </VerticalStackLayout>
-                </Border>
-
-                <Border Grid.Column="1" Grid.Row="3"
-                        BackgroundColor="Transparent"
-                        Stroke="#8B4513"
-                        StrokeThickness="4"
-                        Padding="0"
-                        StrokeShape="RoundRectangle 10">
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer 
-                            Command="{Binding CategoryTappedCommand}" 
-                            CommandParameter="{Binding Categories[7]}" />
-                    </Border.GestureRecognizers>
-                    <VerticalStackLayout HorizontalOptions="Center"
-                                         VerticalOptions="Center"
-                                         Spacing="0">
-                        <Image Source="sarap.png" WidthRequest="60" HeightRequest="60" />
-                        <Label Text="Şarap" TextColor="#8B4513" FontAttributes="Bold" FontSize="16" HorizontalTextAlignment="Center" Margin="0,5,0,0" />
-                    </VerticalStackLayout>
-                </Border>
-
-                <!-- Row 4 -->
-                <Border Grid.Column="0" Grid.Row="4"
-                        BackgroundColor="Transparent"
-                        Stroke="#8B4513"
-                        StrokeThickness="4"
-                        Padding="0"
-                        StrokeShape="RoundRectangle 10">
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer 
-                            Command="{Binding CategoryTappedCommand}" 
-                            CommandParameter="{Binding Categories[8]}" />
-                    </Border.GestureRecognizers>
-                    <VerticalStackLayout HorizontalOptions="Center"
-                                         VerticalOptions="Center"
-                                         Spacing="0">
-                        <Image Source="brendi.png" WidthRequest="60" HeightRequest="60" />
-                        <Label Text="Brendi" TextColor="#8B4513" FontAttributes="Bold" FontSize="16" HorizontalTextAlignment="Center" Margin="0,5,0,0" />
-                    </VerticalStackLayout>
-                </Border>
-
-                <Border Grid.Column="1" Grid.Row="4"
-                        BackgroundColor="Transparent"
-                        Stroke="#8B4513"
-                        StrokeThickness="4"
-                        Padding="0"
-                        StrokeShape="RoundRectangle 10">
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer 
-                            Command="{Binding CategoryTappedCommand}" 
-                            CommandParameter="{Binding Categories[9]}" />
-                    </Border.GestureRecognizers>
-                    <VerticalStackLayout HorizontalOptions="Center"
-                                         VerticalOptions="Center"
-                                         Spacing="0">
-                        <Image Source="absent.png" WidthRequest="60" HeightRequest="60" />
-                        <Label Text="Absent" TextColor="#8B4513" FontAttributes="Bold" FontSize="16" HorizontalTextAlignment="Center" Margin="0,5,0,0" />
-                    </VerticalStackLayout>
-                </Border>
-
-                <!-- Row 5 -->
-                <Border Grid.Row="5" Grid.ColumnSpan="2"
-                        BackgroundColor="Transparent"
-                        Stroke="#8B4513"
-                        StrokeThickness="4"
-                        Padding="0"
-                        StrokeShape="RoundRectangle 10">
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer 
-                            Command="{Binding CategoryTappedCommand}" 
-                            CommandParameter="{Binding Categories[10]}" />
-                    </Border.GestureRecognizers>
-                    <VerticalStackLayout HorizontalOptions="Center"
-                                         VerticalOptions="Center"
-                                         Spacing="0">
-                        <Image Source="diger.png" WidthRequest="60" HeightRequest="60" />
-                        <Label Text="Diğer" TextColor="#8B4513" FontAttributes="Bold" FontSize="16" HorizontalTextAlignment="Center" Margin="0,5,0,0" />
-                    </VerticalStackLayout>
-                </Border>
-
-            </Grid>
-        </ScrollView>
+        <Image Grid.Row="0" Source="bar_hero.jpg" Aspect="AspectFill" HeightRequest="200" />
+        <!-- Kategorileri listeleyen CollectionView -->
+        <CollectionView Grid.Row="1"
+                    ItemsSource="{Binding Categories}"
+                    SelectionMode="None">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" Span="2" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:CategoryModel">
+                    <!-- Border kontrolüne InputTransparent="False" ekledik ve arka planı Transparent bıraktık,
+               böylece dokunma olayları algılanır. -->
+                    <Border BackgroundColor="Transparent"
+                  Stroke="#8B4513"
+                  StrokeThickness="4"
+                  Padding="0"
+                  StrokeShape="RoundRectangle 10"
+                  InputTransparent="False">
+                        <Border.GestureRecognizers>
+                            <!-- Komut bağlamasını x:Reference ile yapıyoruz. 
+                   ContentPage’nin BindingContext’i HomeViewModel olduğu için CategoryTappedCommand kullanılacak. -->
+                            <TapGestureRecognizer Command="{Binding Source={x:Reference HomePageRoot}, Path=BindingContext.CategoryTappedCommand}"
+                                    CommandParameter="{Binding .}" />
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="0">
+                            <Image Source="{Binding ImageSource}" WidthRequest="60" HeightRequest="60" />
+                            <Label Text="{Binding Name}" 
+                     TextColor="#8B4513" 
+                     FontAttributes="Bold" 
+                     FontSize="16" 
+                     HorizontalTextAlignment="Center" 
+                     Margin="0,5,0,0" />
+                        </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
     </Grid>
 </ContentPage>

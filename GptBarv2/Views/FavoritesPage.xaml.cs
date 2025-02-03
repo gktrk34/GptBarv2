@@ -1,9 +1,14 @@
-namespace GptBarv2.Views;
+using GptBarv2.ViewModels;
+using Microsoft.Maui.Controls;
 
-public partial class FavoritesPage : ContentPage
+namespace GptBarv2.Views
 {
-    public FavoritesPage()
+    public partial class FavoritesPage : ContentPage
     {
-        InitializeComponent();
+        public FavoritesPage()
+        {
+            InitializeComponent();
+            BindingContext = new FavoritesViewModel();
+        }
     }
 }

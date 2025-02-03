@@ -1,40 +1,14 @@
-namespace GptBarv2.Views;
+using GptBarv2.ViewModels;
+using Microsoft.Maui.Controls;
 
-public partial class WelcomePage : ContentPage
+namespace GptBarv2.Views
 {
-    public WelcomePage()
+    public partial class WelcomePage : ContentPage
     {
-        InitializeComponent();
-    }
-
-    private async void OnNavigateTapped(object sender, TappedEventArgs e)
-    {
-        string pageName = e.Parameter.ToString();
-        switch (pageName)
+        public WelcomePage()
         {
-            case "HomePage":
-                await Shell.Current.GoToAsync($"//{nameof(HomePage)}");
-                break;
-            case "CocktailsPage":
-                //await Shell.Current.GoToAsync($"//{nameof(CocktailsPage)}"); // Eðer varsa
-                break;
-            case "MyBarPage":
-                //await Shell.Current.GoToAsync($"//{nameof(MyBarPage)}"); // Eðer varsa
-                break;
-            case "FavoritesPage":
-                await Shell.Current.GoToAsync($"//{nameof(FavoritesPage)}");
-                break;
-            case "ShoppingListPage":
-                //await Shell.Current.GoToAsync($"//{nameof(ShoppingListPage)}"); // Eðer varsa
-                break;
-            case "KnowledgeBasePage":
-                //await Shell.Current.GoToAsync($"//{nameof(KnowledgeBasePage)}"); // Eðer varsa
-                break;
-            case "SettingsPage":
-                //await Shell.Current.GoToAsync($"//{nameof(SettingsPage)}"); // Eðer varsa
-                break;
-            default:
-                break;
+            InitializeComponent();
+            BindingContext = new WelcomeViewModel();
         }
     }
 }

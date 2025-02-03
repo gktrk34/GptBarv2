@@ -1,49 +1,31 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage x:Class="GptBarv2.Views.CategoryDetailPage"
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:models="clr-namespace:GptBarv2.Models"
-             xmlns:local="clr-namespace:GptBarv2.Views"
-             x:Name="CategoryDetailPageRoot"
-             x:DataType="local:CategoryDetailPage"
-             Title="{Binding CategoryName}">
-
+<ContentPage 
+    x:Class="GptBarv2.Views.CategoryDetailPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:GptBarv2.Models"
+    x:Name="CategoryDetailPageRoot"
+    Title="{Binding CategoryName}">
     <Grid RowDefinitions="Auto,*">
-
         <SearchBar Grid.Row="0"
-                   x:Name="searchBar"
-                   Placeholder="Marka Ara"
-                   TextChanged="OnSearchTextChanged" />
-
+               x:Name="searchBar"
+               Placeholder="Marka Ara"
+               Text="{Binding SearchText, Mode=TwoWay}" />
         <CollectionView Grid.Row="1"
-                        x:Name="BrandsCollectionView"
-                        ItemsSource="{Binding Brands}"
-                        SelectionMode="None"
-                        Margin="10,0,10,0">
-
+                    ItemsSource="{Binding Brands}"
+                    SelectionMode="None">
             <CollectionView.ItemsLayout>
                 <LinearItemsLayout Orientation="Vertical" />
             </CollectionView.ItemsLayout>
-
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:BrandModel">
-                    <Border Stroke="#8B4513"
-                            StrokeThickness="4"
-                            Padding="10"
-                            Margin="5"
-                            StrokeShape="RoundRectangle 10"
-                            HorizontalOptions="FillAndExpand">
+                    <Border Stroke="#8B4513" StrokeThickness="4" Padding="10" Margin="5" StrokeShape="RoundRectangle 10" HorizontalOptions="FillAndExpand">
                         <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnBrandTapped" />
+                            <TapGestureRecognizer Command="{Binding Source={x:Reference CategoryDetailPageRoot}, Path=BindingContext.BrandTappedCommand}" CommandParameter="{Binding .}" />
                         </Border.GestureRecognizers>
                         <VerticalStackLayout>
                             <Image Source="{Binding ImageSource}" Aspect="AspectFit" WidthRequest="80" HeightRequest="80" HorizontalOptions="Center" />
-                            <Label Text="{Binding Name}"
-                                   TextColor="#8B4513"
-                                   FontAttributes="Bold"
-                                   FontSize="16"
-                                   HorizontalTextAlignment="Center"
-                                   VerticalOptions="Center" />
+                            <Label Text="{Binding Name}" TextColor="#8B4513" FontAttributes="Bold" FontSize="16" HorizontalTextAlignment="Center" VerticalOptions="Center" />
                         </VerticalStackLayout>
                     </Border>
                 </DataTemplate>

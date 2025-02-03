@@ -1,127 +1,131 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="GptBarv2.Views.WelcomePage"
-             Title="Welcome">
-
+<ContentPage 
+    x:Class="GptBarv2.Views.WelcomePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Welcome">
     <Grid RowDefinitions="Auto,*">
-        <Image Grid.Row="0"
-               Source="bar_hero.jpg"
-               Aspect="AspectFill"
-               HeightRequest="200" />
-
+        <!-- Üst hero görseli -->
+        <Image Grid.Row="0" Source="bar_hero.jpg" Aspect="AspectFill" HeightRequest="200" />
+        <!-- Menü içeriği -->
         <ScrollView Grid.Row="1">
             <Grid ColumnDefinitions="*,*"
-                  RowDefinitions="120, 120, 120, 120"
-                  RowSpacing="10"
-                  ColumnSpacing="10"
-                  Padding="20">
-
+            RowDefinitions="120, 120, 120, 120"
+            RowSpacing="10"
+            ColumnSpacing="10"
+            Padding="20">
+                <!-- İçkiler -->
                 <Border Grid.Column="0" Grid.Row="0"
-        Stroke="#8B4513"
-        StrokeThickness="4"
-        Padding="0"
-        StrokeShape="RoundRectangle 10">
+                Stroke="#8B4513"
+                StrokeThickness="4"
+                Padding="0"
+                StrokeShape="RoundRectangle 10">
                     <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnNavigateTapped" CommandParameter="HomePage" />
+                        <TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="HomePage" />
                     </Border.GestureRecognizers>
                     <VerticalStackLayout HorizontalOptions="Center"
-                         VerticalOptions="Center" Spacing="0">
-                        <Image Source="dfl.png" WidthRequest="60" HeightRequest="60"  />
+                               VerticalOptions="Center"
+                               Spacing="0">
+                        <Image Source="dfl.png" WidthRequest="60" HeightRequest="60" />
                         <Label Text="İçkiler" TextColor="#8B4513" FontAttributes="Bold" FontSize="16" HorizontalTextAlignment="Center" Margin="0,5,0,0"/>
                     </VerticalStackLayout>
                 </Border>
-
+                <!-- Kokteyller -->
                 <Border Grid.Column="1" Grid.Row="0"
-                        Stroke="#8B4513"
-                        StrokeThickness="4"
-                        Padding="0"
-                        StrokeShape="RoundRectangle 10">
+                Stroke="#8B4513"
+                StrokeThickness="4"
+                Padding="0"
+                StrokeShape="RoundRectangle 10">
                     <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnNavigateTapped" CommandParameter="CocktailsPage" />
+                        <TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="CocktailsPage" />
                     </Border.GestureRecognizers>
                     <VerticalStackLayout HorizontalOptions="Center"
-                        VerticalOptions="Center" Spacing="0">
-                        <Image Source="dfm.png" WidthRequest="60" HeightRequest="60"  />
+                               VerticalOptions="Center"
+                               Spacing="0">
+                        <Image Source="dfm.png" WidthRequest="60" HeightRequest="60" />
                         <Label Text="Kokteyller" TextColor="#8B4513" FontAttributes="Bold" FontSize="16" HorizontalTextAlignment="Center" Margin="0,5,0,0"/>
                     </VerticalStackLayout>
                 </Border>
-
+                <!-- Barım -->
                 <Border Grid.Column="0" Grid.Row="1"
-                        Stroke="#8B4513"
-                        StrokeThickness="4"
-                        Padding="0"
-                        StrokeShape="RoundRectangle 10">
+                Stroke="#8B4513"
+                StrokeThickness="4"
+                Padding="0"
+                StrokeShape="RoundRectangle 10">
                     <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnNavigateTapped" CommandParameter="MyBarPage" />
+                        <TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="MyBarPage" />
                     </Border.GestureRecognizers>
                     <VerticalStackLayout HorizontalOptions="Center"
-                         VerticalOptions="Center" Spacing="0">
-                        <Image Source="asd.png" WidthRequest="60" HeightRequest="60"  />
+                               VerticalOptions="Center"
+                               Spacing="0">
+                        <Image Source="asd.png" WidthRequest="60" HeightRequest="60" />
                         <Label Text="Barım" TextColor="#8B4513" FontAttributes="Bold" FontSize="16" HorizontalTextAlignment="Center" Margin="0,5,0,0"/>
                     </VerticalStackLayout>
                 </Border>
-
+                <!-- Favorilerim -->
                 <Border Grid.Column="1" Grid.Row="1"
-                        Stroke="#8B4513"
-                        StrokeThickness="4"
-                        Padding="0"
-                        StrokeShape="RoundRectangle 10">
+                Stroke="#8B4513"
+                StrokeThickness="4"
+                Padding="0"
+                StrokeShape="RoundRectangle 10">
                     <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnNavigateTapped" CommandParameter="FavoritesPage" />
+                        <TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="FavoritesPage" />
                     </Border.GestureRecognizers>
                     <VerticalStackLayout HorizontalOptions="Center"
-                        VerticalOptions="Center" Spacing="0">
-                        <Image Source="aqq.png" WidthRequest="60" HeightRequest="60"  />
+                               VerticalOptions="Center"
+                               Spacing="0">
+                        <Image Source="aqq.png" WidthRequest="60" HeightRequest="60" />
                         <Label Text="Favorilerim" TextColor="#8B4513" FontAttributes="Bold" FontSize="16" HorizontalTextAlignment="Center" Margin="0,5,0,0"/>
                     </VerticalStackLayout>
                 </Border>
-
+                <!-- Alışveriş Listem -->
                 <Border Grid.Column="0" Grid.Row="2"
-                        Stroke="#8B4513"
-                        StrokeThickness="4"
-                        Padding="0"
-                        StrokeShape="RoundRectangle 10">
+                Stroke="#8B4513"
+                StrokeThickness="4"
+                Padding="0"
+                StrokeShape="RoundRectangle 10">
                     <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnNavigateTapped" CommandParameter="ShoppingListPage" />
+                        <TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="ShoppingListPage" />
                     </Border.GestureRecognizers>
                     <VerticalStackLayout HorizontalOptions="Center"
-                         VerticalOptions="Center" Spacing="0">
-                        <Image Source="shp.png" WidthRequest="60" HeightRequest="60"  />
+                               VerticalOptions="Center"
+                               Spacing="0">
+                        <Image Source="shp.png" WidthRequest="60" HeightRequest="60" />
                         <Label Text="Alışveriş Listem" TextColor="#8B4513" FontAttributes="Bold" FontSize="16" HorizontalTextAlignment="Center" Margin="0,5,0,0"/>
                     </VerticalStackLayout>
                 </Border>
-
+                <!-- Bilgi Bankası -->
                 <Border Grid.Column="1" Grid.Row="2"
-                        Stroke="#8B4513"
-                        StrokeThickness="4"
-                        Padding="0"
-                        StrokeShape="RoundRectangle 10">
+                Stroke="#8B4513"
+                StrokeThickness="4"
+                Padding="0"
+                StrokeShape="RoundRectangle 10">
                     <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnNavigateTapped" CommandParameter="KnowledgeBasePage" />
+                        <TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="KnowledgeBasePage" />
                     </Border.GestureRecognizers>
                     <VerticalStackLayout HorizontalOptions="Center"
-                         VerticalOptions="Center" Spacing="0">
-                        <Image Source="bb.png" WidthRequest="60" HeightRequest="60"  />
+                               VerticalOptions="Center"
+                               Spacing="0">
+                        <Image Source="bb.png" WidthRequest="60" HeightRequest="60" />
                         <Label Text="Bilgi Bankası" TextColor="#8B4513" FontAttributes="Bold" FontSize="16" HorizontalTextAlignment="Center" Margin="0,5,0,0"/>
                     </VerticalStackLayout>
                 </Border>
-
+                <!-- Ayarlar -->
                 <Border Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2"
-                        Stroke="#8B4513"
-                        StrokeThickness="4"
-                        Padding="0"
-                        StrokeShape="RoundRectangle 10">
+                Stroke="#8B4513"
+                StrokeThickness="4"
+                Padding="0"
+                StrokeShape="RoundRectangle 10">
                     <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnNavigateTapped" CommandParameter="SettingsPage" />
+                        <TapGestureRecognizer Command="{Binding NavigateCommand}" CommandParameter="SettingsPage" />
                     </Border.GestureRecognizers>
                     <VerticalStackLayout HorizontalOptions="Center"
-                        VerticalOptions="Center" Spacing="0">
-                        <Image Source="aa.png" WidthRequest="60" HeightRequest="60"  />
+                               VerticalOptions="Center"
+                               Spacing="0">
+                        <Image Source="aa.png" WidthRequest="60" HeightRequest="60" />
                         <Label Text="Ayarlar" TextColor="#8B4513" FontAttributes="Bold" FontSize="16" HorizontalTextAlignment="Center" Margin="0,5,0,0"/>
                     </VerticalStackLayout>
                 </Border>
-
             </Grid>
         </ScrollView>
     </Grid>
